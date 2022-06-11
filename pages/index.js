@@ -1,18 +1,35 @@
 import Head from 'next/head'
+import { useSession, signIn, signOut } from 'next-auth/react'
 
 import App from './_app'
 import styles from '../styles/Home.module.css'
 
 export default function Home() {
-  return (
-    <div className={styles.container}>
-      <Head>
-        <title>Spotlist Analysis</title>
-        <meta name="description" content="Get Playlist Analysis for Spotify" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+  // return (
+  //   <div className={styles.container}>
+  //     <Head>
+  //       <title>Spotlist Analysis</title>
+  //       <meta name="description" content="Get Playlist Analysis for Spotify" />
+  //       <link rel="icon" href="/favicon.ico" />
+  //     </Head>
 
-      <App />
-    </div>
-  )
+  //     <App />
+  //   </div>
+  // )
+  const {data: session} = useSession();
+
+  if (session) {
+    return (
+      <>
+        Signed in as {session?.token?.email} <br />
+        <button onClick={() => signOut('spotify')}>Sign out</button>
+      </>
+    );
+  }
+  return (
+    <>
+      Not signed in <br />
+      <button onClick={() => signIn('spotify')}>Sign in</button>
+    </>
+  );
 }
