@@ -10,8 +10,9 @@ export default function Home() {
 
   const getPlaylists = async () => {
     const res = await fetch('/api/playlists')
-    const { items } = await res.json()
-    setList(items)
+    const { playlists } = await res.json()
+    setList(playlists)
+    console.log(playlists)
   }
 
   if (session) {
@@ -27,7 +28,7 @@ export default function Home() {
         {list.map((item) => (
           <div key={item.id}>
             <h1>{item.name}</h1>
-            <img src={item.images[0]?.url} width="100" />
+            {/* <img src={item.images[0]?.url} width="100" /> */}
           </div>
         ))}
         
