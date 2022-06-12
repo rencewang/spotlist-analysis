@@ -10,7 +10,7 @@ export default NextAuth({
             clientSecret: process.env.CLIENT_SECRET,
         }),
     ],
-    secret: process.env.NEXTAUTH_SECRET,
+    secret: "o4XoNNzVnk",
     callbacks: {
         async jwt({token, account}) {
             if (account) {

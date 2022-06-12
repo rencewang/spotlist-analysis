@@ -50,7 +50,7 @@ export default function Home() {
       </Head>
 
       Not signed in <br />
-      <button onClick={() => signIn()}>Sign in</button>
+      <button onClick={() => signIn('spotify')}>Sign in</button>
     </main>
   );
 }
