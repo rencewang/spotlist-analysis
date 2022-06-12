@@ -20,8 +20,8 @@ const handler = async (req, res) => {
             next = nextPageData.next
             playlists.push(...items)
         }
-    
         return res.status(200).json({ playlists })
+        
     } catch (error) {
         return error
     }

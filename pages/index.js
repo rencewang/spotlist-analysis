@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Head from 'next/head'
 import { useSession, signIn, signOut } from 'next-auth/react'
 
@@ -15,6 +15,10 @@ export default function Home() {
     console.log(playlists)
   }
 
+  useEffect(() => {
+    getPlaylists()
+  }, [])
+
   if (session) {
     return (
       <main>
@@ -24,11 +28,9 @@ export default function Home() {
           <link rel="icon" href="/favicon.ico" />
         </Head>
 
-        <button onClick={() => getPlaylists()}>Get all playlists</button>
         {list.map((item) => (
           <div key={item.id}>
             <h1>{item.name}</h1>
-            {/* <img src={item.images[0]?.url} width="100" /> */}
           </div>
         ))}
         
