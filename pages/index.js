@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import Head from 'next/head'
-import { useSession, signIn, signOut } from 'next-auth/react'
+// import { useSession, signIn, signOut } from 'next-auth/react'
+import { getCookies, setCookies, removeCookies } from 'cookies-next';
+
 
 import styles from '../styles/Home.module.css'
 
 export default function Home() {
-  const {data: session} = useSession()
+  // const {data: session} = useSession()
   const [list, setList] = useState([])
 
   const getPlaylists = async () => {
@@ -16,31 +18,32 @@ export default function Home() {
   }
 
   useEffect(() => {
-    getPlaylists()
+    // getPlaylists()
+    console.log(getCookies('token'))
   }, [])
 
-  if (session) {
-    return (
-      <main>
-        <Head>
-          <title>Spotlist Analysis</title>
-          <meta name="description" content="Get Playlist Analysis for Spotify" />
-          <link rel="icon" href="/favicon.ico" />
-        </Head>
+  // if (session) {
+    // return (
+    //   <main>
+    //     <Head>
+    //       <title>Spotlist Analysis</title>
+    //       <meta name="description" content="Get Playlist Analysis for Spotify" />
+    //       <link rel="icon" href="/favicon.ico" />
+    //     </Head>
 
-        {list.map((item) => (
-          <div key={item.id}>
-            <h1>{item.name}</h1>
-          </div>
-        ))}
+    //     {list.map((item) => (
+    //       <div key={item.id}>
+    //         <h1>{item.name}</h1>
+    //       </div>
+    //     ))}
         
-        <div>
-          Signed in as {session?.token?.email} <br />
-          <button onClick={() => signOut('spotify')}>Sign out</button>
-        </div>
-      </main>
-    );
-  }
+    //     <div>
+    //       {/* Signed in as {session?.token?.email} <br /> */}
+    //       {/* <button onClick={() => signOut('spotify')}>Sign out</button> */}
+    //     </div>
+    //   </main>
+    // );
+  // }
   return (
     <main>
       <Head>
@@ -50,7 +53,8 @@ export default function Home() {
       </Head>
 
       Not signed in <br />
-      <button onClick={() => signIn('spotify')}>Sign in</button>
+      {/* <button onClick={() => signIn('spotify')}>Sign in</button> */}
+      <a href="/api/login">Sign in</a>
     </main>
   );
 }

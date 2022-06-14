@@ -2,6 +2,7 @@ import NextAuth from 'next-auth'
 import SpotifyProvider from 'next-auth/providers/spotify'
 
 export default NextAuth({
+    site: process.env.NEXTAUTH_URL,
     providers: [
         SpotifyProvider({
             authorization:
