@@ -3,19 +3,13 @@ import { getCookies } from 'cookies-next'
 
 const { CLIENT_ID, CLIENT_SECRET } = process.env
 const TOKEN_ENDPOINT = 'https://accounts.spotify.com/api/token'
+const AUTH = Buffer.from(`${CLIENT_ID}:${CLIENT_SECRET}`, 'utf-8').toString('base64')
 
 export default async (req, res) => {
     const refresh_token = getCookies({ req, res }).token
-    const AUTH = Buffer.from(`${CLIENT_ID}:${CLIENT_SECRET}`, 'utf-8').toString('base64')
     const DATA = new URLSearchParams({
         grant_type: 'refresh_token',
         refresh_token: refresh_token, 
-    })
-    const PARAM = new URLSearchParams({
-        grant_type: 'refresh_token',
-        refresh_token: refresh_token, 
-        client_id: CLIENT_ID,
-        response_type: 'code'
     })
 
     try {
@@ -28,6 +22,6 @@ export default async (req, res) => {
         res.send(response.data.access_token)
     } catch (error) {
         // console.log(error)
-        res.body({ error: error })
+        res.send({ error: error })
     }
 }

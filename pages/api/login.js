@@ -1,5 +1,3 @@
-import querystring from 'query-string'
-
 const { CLIENT_ID, REDIRECT_URI } = process.env
 const SCOPES = [ "user-top-read user-read-recently-played user-read-currently-playing playlist-read-private user-library-read" ]
 const AUTH_PARAM = new URLSearchParams({

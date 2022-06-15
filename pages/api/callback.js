@@ -1,6 +1,5 @@
 import axios from 'axios'
-import querystring from 'querystring'
-import  { getCookies, getCookie, setCookies, removeCookies } from 'cookies-next'
+import { setCookies } from 'cookies-next'
 
 const { CLIENT_ID, CLIENT_SECRET, REDIRECT_URI } = process.env
 const AUTH_ENDPOINT = 'https://accounts.spotify.com/api/token'
@@ -32,5 +31,3 @@ export default async (req, res) => {
 
     return res.redirect(302, '/')
 }
-
-// export default Login
