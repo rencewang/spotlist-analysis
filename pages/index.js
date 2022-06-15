@@ -13,6 +13,7 @@ export default function Home() {
   const getPlaylists = async (refresh_token) => {
     try {
       const access_token = await getAccessToken(refresh_token)
+      console.log(access_token)
       
       const response = await fetchByURL(access_token, 'https://api.spotify.com/v1/me/playlists')
       let { items, next } = await response.json()
@@ -28,6 +29,7 @@ export default function Home() {
       }
 
     } catch (error) {
+      console.log(error)
       return error
     }
 
@@ -45,10 +47,12 @@ export default function Home() {
     if (getCookies('token').token) {
       getPlaylists(getCookies('token').token)
     }
+    console.log(getCookies('token'))
     console.log(getCookies('token').token)
+    console.log(list)
   }, [])
 
-  if (list) {
+  if (list.length) {
     return (
       <main>
         <Head>

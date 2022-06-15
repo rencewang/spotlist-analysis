@@ -1,11 +1,11 @@
-import { getCookies, setCookies, removeCookies } from 'cookies-next';
+import axios from "axios"
+import { getCookies } from 'cookies-next'
 
 const { CLIENT_ID, CLIENT_SECRET } = process.env
 const TOKEN_ENDPOINT = 'https://accounts.spotify.com/api/token'
 
-
 export default async (req, res) => {
-    const refresh_token = getCookies('token').token
+    const refresh_token = getCookies({ req, res }).token
     const AUTH = Buffer.from(`${CLIENT_ID}:${CLIENT_SECRET}`, 'utf-8').toString('base64')
     const DATA = new URLSearchParams({
         grant_type: 'refresh_token',
@@ -25,14 +25,9 @@ export default async (req, res) => {
                 'Content-Type': 'application/x-www-form-urlencoded',
             }
         })
-
-        
-        res.send(response)
+        res.send(response.data.access_token)
     } catch (error) {
-        res.send(error)
+        // console.log(error)
+        res.body({ error: error })
     }
-
-    // console.log(response)
-    
-    // return response.json().access_token
 }

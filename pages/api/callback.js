@@ -23,8 +23,7 @@ export default async (req, res) => {
         })
         console.log(response.data.refresh_token)
 
-        setCookies('token', response.data.refresh_token, { req, res, maxAge: 60 * 60 * 24 })
-
+        setCookies('token', response.data.refresh_token, { req, res, httpOnly: false, maxAge: 60 * 60 * 24 })
         // res.send({ refresh_token: response.data.refresh_token })
     } catch (error) {
         console.log(error)
