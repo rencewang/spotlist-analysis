@@ -3,13 +3,12 @@ import querystring from 'querystring'
 import  { getCookies, getCookie, setCookies, removeCookies } from 'cookies-next'
 
 const { CLIENT_ID, CLIENT_SECRET, REDIRECT_URI } = process.env
+const AUTH_ENDPOINT = 'https://accounts.spotify.com/api/token'
+const AUTH = Buffer.from(`${CLIENT_ID}:${CLIENT_SECRET}`, 'utf-8').toString('base64')
 
 export default async (req, res) => {
     const code = req.query.code || null
-
-    const AUTH_ENDPOINT = 'https://accounts.spotify.com/api/token'
-    const AUTH = Buffer.from(`${CLIENT_ID}:${CLIENT_SECRET}`, 'utf-8').toString('base64')
-    const DATA = querystring.stringify({
+    const DATA = new URLSearchParams({
         code: code, 
         redirect_uri: REDIRECT_URI,
         grant_type: 'authorization_code'
