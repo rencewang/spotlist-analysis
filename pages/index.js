@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { getCookies } from 'cookies-next'
 
 
-import { getPlaylists, getTracks } from '../utils/spotify'
+import { getPlaylists, getTracks, getGenresFromArtists } from '../utils/spotify'
 import styles from '../styles/Home.module.css'
 
 export default function Home() {
@@ -12,16 +12,25 @@ export default function Home() {
   const [loggedIn, setLoggedIn] = useState(false)
   const [list, setList] = useState([])
   const [tracks, setTracks] = useState([])
-
+  const [artists, setArtists] = useState([])
+  const [artistIds, setArtistIds] = useState([])
 
   const fillPlaylists = async () => {
     const playlists_response = await getPlaylists()
     setList(playlists_response)
   }
 
-  const fillTracks = async (url) => {
+  const fillTracksArtists = async (url) => {
     const tracks_response = await getTracks(url)
     setTracks(tracks_response)
+    setArtists([])
+    setArtistIds([])
+    tracks_response.map((item) => {
+      setArtists(artists => [...artists, ...item.track.artists])
+      item.track.artists.map((artist) => {
+        setArtistIds(artistIds => [...artistIds, artist.id])
+      })
+    })
   }
 
   // fill playlists in once when first load
@@ -50,18 +59,26 @@ export default function Home() {
           {loggedIn ? <div>welcome</div> : <Link href="/api/login">Sign in</Link>} 
         </header>
 
+        <button onClick={() => getGenresFromArtists(artistIds)}>hi</button>
+
         <section id="playlist-listing">
-          {list.map((item) => (
-            <div key={item.id}>
-              <button onClick={() => fillTracks(item.tracks.href)}>{item.name}</button>
+          {list.map((item, index) => (
+            <div key={index}>
+              <button onClick={() => fillTracksArtists(item.tracks.href)}>{item.name}</button>
             </div>
           ))}
         </section>
 
         <section id="playlist-analysis">
-          {tracks.map((item) => (
-            <div key={item.track.id}>
+          {tracks.map((item, index) => (
+            <div key={index}>
               <div>{item.track.name}</div>
+            </div>
+          ))}
+
+          {artists.map((item, index) => (
+            <div key={index}>
+              <div>{item.name}</div>
             </div>
           ))}
         </section>
