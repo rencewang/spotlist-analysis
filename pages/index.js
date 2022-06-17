@@ -26,6 +26,7 @@ export default function Home() {
   const [tracks, setTracks] = useState([])
   const [artists, setArtists] = useState([])
   const [artistIds, setArtistIds] = useState([])
+  const [genres, setGenres] = useState([])
 
   const fillPlaylists = async () => {
     const playlists_response = await getPlaylists()
@@ -46,6 +47,11 @@ export default function Home() {
     })
   }
 
+  // useEffect(() => {
+  //   const genre_response = await getGenresFromArtists(artistIds)
+  //   setGenres(genre_response)
+  // }, [artistIds])
+
   // dropdown options for selecting playlist
   const [selectedPlaylist, setSelectedPlaylist] = useState(null)
   const playlistOptions = useMemo(() => 
@@ -57,7 +63,7 @@ export default function Home() {
 
   // fill tracks and artists with new playlist
   useEffect(() => {
-    fillTracksArtistsGenres(selectedPlaylist.value)
+    if (selectedPlaylist) fillTracksArtistsGenres(selectedPlaylist.value)
   }, [selectedPlaylist])
 
   return (
