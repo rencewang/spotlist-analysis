@@ -12,6 +12,7 @@ const fetchByUrl = async (url) => {
     let { items, next } = await response.json()
     results.push(...items)
 
+    // get next pages of API response
     while (next) {
       const nextPage = await fetch(next, {
         headers: {

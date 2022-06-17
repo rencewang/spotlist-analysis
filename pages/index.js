@@ -32,11 +32,12 @@ export default function Home() {
     setPlaylists(playlists_response)
   }
 
-  const fillTracksArtists = async (url) => {
+  const fillTracksArtistsGenres = async (url) => {
     const tracks_response = await getTracks(url)
     setTracks(tracks_response)
     setArtists([])
     setArtistIds([])
+
     tracks_response.map((item) => {
       setArtists(artists => [...artists, ...item.track.artists])
       item.track.artists.map((artist) => {
@@ -45,13 +46,19 @@ export default function Home() {
     })
   }
 
+  // dropdown options for selecting playlist
   const [selectedPlaylist, setSelectedPlaylist] = useState(null)
   const playlistOptions = useMemo(() => 
     playlists.map(playlist => ({
       value: playlist.tracks.href,
       label: playlist.name
     }))
-  , [playlists]);
+  , [playlists])
+
+  // fill tracks and artists with new playlist
+  useEffect(() => {
+    fillTracksArtistsGenres(selectedPlaylist.value)
+  }, [selectedPlaylist])
 
   return (
     <main>
@@ -77,36 +84,27 @@ export default function Home() {
           }
         </header>
 
+        <div className="listing-container">
+          <section className="listing-table" id="playlist-tracks">
+            {tracks.map((item, index) => (
+              <div key={index}>
+                <div>{item.track.name}</div>
+              </div>
+            ))}
+          </section>
 
-        {/* <Select
-            defaultValue={selectedOption}
-            onChange={setSelectedOption}
-            options={options}
-          /> */}
+          <section className="listing-table" id="playlist-artists">
+            {artists.map((item, index) => (
+              <div key={index}>
+                <div>{item.name}</div>
+              </div>
+            ))}
+          </section>
 
-        <button onClick={() => getGenresFromArtists(artistIds)}>hi</button>
-
-        <section id="playlist-listing">
-          {playlists.map((item, index) => (
-            <div key={index}>
-              <button onClick={() => fillTracksArtists(item.tracks.href)}>{item.name}</button>
-            </div>
-          ))}
-        </section>
-
-        <section id="playlist-analysis">
-          {tracks.map((item, index) => (
-            <div key={index}>
-              <div>{item.track.name}</div>
-            </div>
-          ))}
-
-          {artists.map((item, index) => (
-            <div key={index}>
-              <div>{item.name}</div>
-            </div>
-          ))}
-        </section>
+          <section className="listing-table" id="playlist-genres">
+            
+          </section>
+        </div>
       </>}
     </main>
   )

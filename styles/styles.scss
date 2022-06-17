@@ -26,3 +26,12 @@ header {
   align-items: center;
   background: rgba(255, 255, 255, 30%);
 }
+
+.listing-container {
+  display: flex;
+  flex-direction: row;
+}
+
+.listing-table {
+  width: 30%;
+}
