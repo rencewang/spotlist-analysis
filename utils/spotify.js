@@ -45,13 +45,12 @@ const chunk = (arr, size) =>
   )
 
 export const getGenresFromArtists = async (artistIds) => {
-  const genres = new Map()
   // artists can only be called with maximum of 50
   const artistIdsList = chunk(artistIds, 50).map(e => e.join(','))
 
   try {
     const token_response = await axios.get('/api/token')
-    artistIdsList.forEach(async (idList) => {
+    const genres = await artistIdsList.reduce( async (acc, idList) => {
       const response = await axios.get('https://api.spotify.com/v1/artists', {
         params: {
           ids: idList,
@@ -61,17 +60,19 @@ export const getGenresFromArtists = async (artistIds) => {
         }
       })
       const artists = response.data.artists
-      artists.map(artist => {
+
+      artists.forEach(artist => {
         artist.genres.forEach(genre => {
-          genres.set(genre, genres.get(genre) ? genres.get(genre) + 1 : 1)
+          if (!(genre in acc)) acc[genre] = 0
+          acc[genre] = acc[genre] + 1
         })
       })
-      
-      console.log(genres)
-    })
-    
-    
+      return acc
+    }, {})
+    console.log(genres)
+    return genres
   } catch (error) {
     console.log(error)
+    return {}
   }
 }

@@ -9,7 +9,7 @@ import { getPlaylists, getTracks, getGenresFromArtists } from '../utils/spotify'
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true)
   const [loggedIn, setLoggedIn] = useState(false)
-  
+
   useEffect(() => { 
     // fill playlists in once when first load
     (async () => {
@@ -22,35 +22,15 @@ export default function Home() {
     })()
   }, [])
   
-  const [playlists, setPlaylists] = useState([])
-  const [tracks, setTracks] = useState([])
-  const [artists, setArtists] = useState([])
-  const [artistIds, setArtistIds] = useState([])
-  const [genres, setGenres] = useState([])
-
   const fillPlaylists = async () => {
     const playlists_response = await getPlaylists()
     setPlaylists(playlists_response)
   }
-
-  const fillTracksArtistsGenres = async (url) => {
-    const tracks_response = await getTracks(url)
-    setTracks(tracks_response)
-    setArtists([])
-    setArtistIds([])
-
-    tracks_response.map((item) => {
-      setArtists(artists => [...artists, ...item.track.artists])
-      item.track.artists.map((artist) => {
-        setArtistIds(artistIds => [...artistIds, artist.id])
-      })
-    })
-  }
-
-  // useEffect(() => {
-  //   const genre_response = await getGenresFromArtists(artistIds)
-  //   setGenres(genre_response)
-  // }, [artistIds])
+  
+  const [playlists, setPlaylists] = useState([])
+  const [tracks, setTracks] = useState([])
+  const [genres, setGenres] = useState([])
+  const [artists, setArtists] = useState([])
 
   // dropdown options for selecting playlist
   const [selectedPlaylist, setSelectedPlaylist] = useState(null)
@@ -61,10 +41,21 @@ export default function Home() {
     }))
   , [playlists])
 
-  // fill tracks and artists with new playlist
+  // fill tracks and artists when new playlist selected
   useEffect(() => {
     if (selectedPlaylist) fillTracksArtistsGenres(selectedPlaylist.value)
   }, [selectedPlaylist])
+
+  const fillTracksArtistsGenres = async (url) => {
+    const tracks_response = await getTracks(url)
+    const artists_response = tracks_response.flatMap(item => item.track.artists)
+    const artists_ids = artists_response.map(({ id }) => id)
+    const genre_response = await getGenresFromArtists(artists_ids)
+
+    setTracks(tracks_response)
+    setArtists(artists_response)
+    setGenres(genre_response)
+  }
 
   return (
     <main>
@@ -108,7 +99,11 @@ export default function Home() {
           </section>
 
           <section className="listing-table" id="playlist-genres">
-            
+            {Object.keys(genres).map((item, index) => (
+              <div key={index}>
+                <div>{item}:{genres[item]}</div>
+              </div>
+            ))}
           </section>
         </div>
       </>}
