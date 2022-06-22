@@ -1,5 +1,5 @@
 const { CLIENT_ID, REDIRECT_URI } = process.env
-const SCOPES = [ "user-top-read user-read-recently-played user-read-currently-playing playlist-read-private user-library-read" ]
+const SCOPES = [ "playlist-read-private user-library-read" ]
 const AUTH_PARAM = new URLSearchParams({
     client_id: CLIENT_ID,
     response_type: 'code',
