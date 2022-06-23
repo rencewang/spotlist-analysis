@@ -11,7 +11,10 @@ export default function Home() {
   const [loggedIn, setLoggedIn] = useState(false)
 
   useEffect(() => { 
-    // if (window.location = )
+    // remove search query in redirect
+    if (window.location.search) {
+      window.location.href = `${window.location.origin}${window.location.pathname}`
+    }
     // fill playlists in once when first load
     (async () => {
       // user is logged in if there is a refresh token stored
