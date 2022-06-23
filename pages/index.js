@@ -11,6 +11,7 @@ export default function Home() {
   const [loggedIn, setLoggedIn] = useState(false)
 
   useEffect(() => { 
+    // if (window.location = )
     // fill playlists in once when first load
     (async () => {
       // user is logged in if there is a refresh token stored
@@ -47,14 +48,34 @@ export default function Home() {
   }, [selectedPlaylist])
 
   const fillTracksArtistsGenres = async (url) => {
+    let artists = []
+    let artists_ids = []
+    let artists_count = {}
     const tracks_response = await getTracks(url)
-    const artists_response = tracks_response.flatMap(item => item.track.artists)
-    const artists_ids = artists_response.map(({ id }) => id)
-    const genre_response = await getGenresFromArtists(artists_ids)
+    tracks_response.forEach(track => {
+      track.track.artists.forEach(artist => {
+        artists.push(artist)
+        artists_ids.push(artist.id)
+        artists_count[artist.name] = (artists_count[artist.name] || 0) + 1
+      })
+    })
+    let genre_response = await getGenresFromArtists(artists_ids)
+
+    // sort artists and genres by occurrence in playlist
+    let artists_sort = []
+    let genres_sort = []
+    Object.keys(artists_count).forEach(artist => {
+      artists_sort.push({name: artist, count: artists_count[artist]})
+    })
+    Object.keys(genre_response).forEach(genre => {
+      genres_sort.push({name: genre, count: genre_response[genre]})
+    })
+    artists_sort.sort((a, b) => {return b.count - a.count})
+    genres_sort.sort((a, b) => {return b.count - a.count})
 
     setTracks(tracks_response)
-    setArtists(artists_response)
-    setGenres(genre_response)
+    setArtists(artists_sort)
+    setGenres(genres_sort)
   }
 
   return (
@@ -93,15 +114,15 @@ export default function Home() {
           <section className="listing-table" id="playlist-artists">
             {artists.map((item, index) => (
               <div key={index}>
-                <div>{item.name}</div>
+                <div>{item.name}:{item.count}</div>
               </div>
             ))}
           </section>
 
           <section className="listing-table" id="playlist-genres">
-            {Object.keys(genres).map((item, index) => (
+            {genres.map((item, index) => (
               <div key={index}>
-                <div>{item}:{genres[item]}</div>
+                <div>{item.name}:{item.count}</div>
               </div>
             ))}
           </section>

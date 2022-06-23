@@ -63,13 +63,12 @@ export const getGenresFromArtists = async (artistIds) => {
 
       artists.forEach(artist => {
         artist.genres.forEach(genre => {
-          if (!(genre in acc)) acc[genre] = 0
-          acc[genre] = acc[genre] + 1
+          acc[genre] = acc[genre] ? acc[genre] + 1 : 1
         })
       })
       return acc
     }, {})
-    console.log(genres)
+
     return genres
   } catch (error) {
     console.log(error)
