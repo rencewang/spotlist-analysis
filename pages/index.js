@@ -1,10 +1,12 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState, useRef } from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
 import { getCookies } from 'cookies-next'
 import Select from 'react-select'
 
 import { getPlaylists, getTracks, getGenresFromArtists } from '../utils/spotify'
+import Tracklist from '../utils/tracklist'
+import Analysis from '../utils/analysis'
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true)
@@ -48,6 +50,7 @@ export default function Home() {
   // fill tracks and artists when new playlist selected
   useEffect(() => {
     if (selectedPlaylist) fillTracksArtistsGenres(selectedPlaylist.value)
+    console.log(selectedPlaylist)
   }, [selectedPlaylist])
 
   const fillTracksArtistsGenres = async (url) => {
@@ -81,6 +84,20 @@ export default function Home() {
     setGenres(genres_sort)
   }
 
+  const copied = useRef(null)
+  const tryagain = useRef(null)
+  const [onTracklist, setOnTracklist] = useState(true)
+
+  // For "Copied" alert
+  const ShowAlert = (ref) => {
+    ref.current.style.opacity = 1
+    ref.current.style.display = "block"
+    setTimeout(() => ref.current.style.opacity = 0, 300)
+    setTimeout(() => ref.current.style.display = "none", 400)
+  }
+
+  
+
   return (
     <main>
       <Head>
@@ -89,47 +106,35 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
+      <div className="alert-message" ref={copied}>Copied!</div>
+      <div className="alert-message" ref={tryagain}>Try again with a valid playlist ID or link</div>
+
       {isLoading ? <div>loading...</div> : 
       <>
         <header>
           <div>Spotlist</div>
+          <button onClick={() => setOnTracklist(true)}>Tracklist</button>
+          <button onClick={() => setOnTracklist(false)}>Analysis</button>
           {loggedIn 
-          ? 
-          <Select
-            defaultValue={selectedPlaylist}
-            onChange={setSelectedPlaylist}
-            options={playlistOptions}
-          />
-          : 
-          <button><Link href="/api/login">Sign in</Link></button>
+            ? 
+            <Select
+              defaultValue={selectedPlaylist}
+              onChange={setSelectedPlaylist}
+              options={playlistOptions}
+            />
+            : 
+            <button><Link href="/api/login">Sign in</Link></button>
           }
         </header>
 
-        <div className="listing-container">
-          <section className="listing-table" id="playlist-tracks">
-            {tracks.map((item, index) => (
-              <div key={index}>
-                <div>{item.track.name}</div>
-              </div>
-            ))}
-          </section>
-
-          <section className="listing-table" id="playlist-artists">
-            {artists.map((item, index) => (
-              <div key={index}>
-                <div>{item.name}:{item.count}</div>
-              </div>
-            ))}
-          </section>
-
-          <section className="listing-table" id="playlist-genres">
-            {genres.map((item, index) => (
-              <div key={index}>
-                <div>{item.name}:{item.count}</div>
-              </div>
-            ))}
-          </section>
-        </div>
+        {onTracklist 
+          ?
+          <Tracklist name={selectedPlaylist} owner="who" tracks={tracks} ShowAlert={ShowAlert} copiedRef={copied} />
+          :
+          <Analysis artists={artists} genres={genres} /> 
+        }
+        
+        
       </>}
     </main>
   )
