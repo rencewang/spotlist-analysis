@@ -7,16 +7,19 @@ import Select from 'react-select'
 import { getPlaylists, getTracks, getGenresFromArtists } from '../utils/spotify'
 import Tracklist from '../utils/tracklist'
 import Analysis from '../utils/analysis'
+import * as Styled from '../styles/general'
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true)
   const [loggedIn, setLoggedIn] = useState(false)
+  const [onTracklistPage, setOnTracklistPage] = useState(true)
 
   useEffect(() => { 
     // remove search query in redirect
     if (window.location.search) {
       window.location.href = `${window.location.origin}${window.location.pathname}`
     }
+
     // fill playlists in once when first load
     (async () => {
       // user is logged in if there is a refresh token stored
@@ -27,16 +30,16 @@ export default function Home() {
       setIsLoading(false)
     })()
   }, [])
+
+  const [playlists, setPlaylists] = useState([])
+  const [tracks, setTracks] = useState([])
+  const [genres, setGenres] = useState([])
+  const [artists, setArtists] = useState([])
   
   const fillPlaylists = async () => {
     const playlists_response = await getPlaylists()
     setPlaylists(playlists_response)
   }
-  
-  const [playlists, setPlaylists] = useState([])
-  const [tracks, setTracks] = useState([])
-  const [genres, setGenres] = useState([])
-  const [artists, setArtists] = useState([])
 
   // dropdown options for selecting playlist
   const [selectedPlaylist, setSelectedPlaylist] = useState(null)
@@ -57,6 +60,8 @@ export default function Home() {
     let artists = []
     let artists_ids = []
     let artists_count = {}
+
+    // get artists from tracks and genres from artists
     const tracks_response = await getTracks(url)
     tracks_response.forEach(track => {
       track.track.artists.forEach(artist => {
@@ -84,11 +89,8 @@ export default function Home() {
     setGenres(genres_sort)
   }
 
-  const copied = useRef(null)
-  const tryagain = useRef(null)
-  const [onTracklist, setOnTracklist] = useState(true)
-
   // For "Copied" alert
+  const copied = useRef(null)
   const ShowAlert = (ref) => {
     ref.current.style.opacity = 1
     ref.current.style.display = "block"
@@ -106,28 +108,24 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <div className="alert-message" ref={copied}>Copied!</div>
-      <div className="alert-message" ref={tryagain}>Try again with a valid playlist ID or link</div>
+      <Styled.Alert ref={copied}>Copied!</Styled.Alert>
+      {/* <div className="alert-message" ref={tryagain}>Try again with a valid playlist ID or link</div> */}
 
       {isLoading ? <div>loading...</div> : 
-      <>
-        <header>
+      <Styled.Container>
+        <Styled.Header>
           <div>Spotlist</div>
-          <button onClick={() => setOnTracklist(true)}>Tracklist</button>
-          <button onClick={() => setOnTracklist(false)}>Analysis</button>
+          <Styled.Button onClick={() => setOnTracklistPage(true)}>Tracklist</Styled.Button>
+          <Styled.Button onClick={() => setOnTracklistPage(false)}>Analysis</Styled.Button>
           {loggedIn 
             ? 
-            <Select
-              defaultValue={selectedPlaylist}
-              onChange={setSelectedPlaylist}
-              options={playlistOptions}
-            />
+            <Select defaultValue={selectedPlaylist} onChange={setSelectedPlaylist} options={playlistOptions} />
             : 
-            <button><Link href="/api/login">Sign in</Link></button>
+            <Link href="/api/login"><Styled.Button>Sign in</Styled.Button></Link>
           }
-        </header>
+        </Styled.Header>
 
-        {onTracklist 
+        {onTracklistPage 
           ?
           <Tracklist name={selectedPlaylist} owner="who" tracks={tracks} ShowAlert={ShowAlert} copiedRef={copied} />
           :
@@ -135,7 +133,7 @@ export default function Home() {
         }
         
         
-      </>}
+      </Styled.Container>}
     </main>
   )
 }

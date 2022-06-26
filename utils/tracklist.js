@@ -1,16 +1,17 @@
 import React from 'react'
 import { Icon } from '@iconify/react'
-// import bxCopy from '@iconify/icons-bx/bx-copy'
-// import circleChevronUpFill from '@iconify/icons-akar-icons/circle-chevron-up-fill'
 
-// import '../styles/tracklist.scss'
+import * as Styled from '../styles/tracklist'
 
 const Tracklist = (props) => {
     const {name, owner, tracks, ShowAlert, copiedRef} = props
 
     const TracksToCSV = (tracks) => {
         let csvTracks = tracks.map(row => 
-            '"' + row.track.name + '","' + row.track.artists.map(artist => artist.name).join(', ') + '","' + row.track.album.name + '",' + row.added_at
+            '"' + row.track.name + 
+            '","' + row.track.artists.map(artist => artist.name).join(', ') + 
+            '","' + row.track.album.name + 
+            '",' + row.added_at
         ).join('\r\n')
         return ("track_name, artists, album_name, added_at \r\n" + csvTracks)
     }
@@ -23,7 +24,7 @@ const Tracklist = (props) => {
         // Create a link to download it
         var pom = document.createElement('a')
         pom.href = url
-        pom.setAttribute('download', 'spotlist-export.csv')
+        pom.setAttribute('download', `spotlist-export-${name}.csv`)
         pom.click()
     }
 
@@ -36,14 +37,6 @@ const Tracklist = (props) => {
         document.execCommand("copy")
         window.getSelection().removeAllRanges()
     }
-
-    // For scroll up button
-    const ScrollUp = (e) => {
-        e.preventDefault()
-        document.querySelector("#content").scrollTo( { left: 0, top: 0, behavior: 'smooth' } )
-    }
-
-    console.log(tracks)
 
     return (
         <section className="results" id="results">
