@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState, useRef } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
 import { getCookies } from 'cookies-next'
@@ -89,17 +89,6 @@ export default function Home() {
     setGenres(genres_sort)
   }
 
-  // For "Copied" alert
-  const copied = useRef(null)
-  const ShowAlert = (ref) => {
-    ref.current.style.opacity = 1
-    ref.current.style.display = "block"
-    setTimeout(() => ref.current.style.opacity = 0, 300)
-    setTimeout(() => ref.current.style.display = "none", 400)
-  }
-
-  
-
   return (
     <main>
       <Head>
@@ -107,33 +96,41 @@ export default function Home() {
         <meta name="description" content="Get Playlist Analysis for Spotify" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      
 
-      <Styled.Alert ref={copied}>Copied!</Styled.Alert>
-      {/* <div className="alert-message" ref={tryagain}>Try again with a valid playlist ID or link</div> */}
+      {isLoading 
+        ? 
+        <div>loading...</div> 
+        : 
+        <Styled.Container>
+          <Styled.Header>
+            <Styled.Flex>
+              <Styled.Button onClick={() => setOnTracklistPage(true)}>Tracklist</Styled.Button>
+              <Styled.Button onClick={() => setOnTracklistPage(false)}>Analysis</Styled.Button>
+            </Styled.Flex>
 
-      {isLoading ? <div>loading...</div> : 
-      <Styled.Container>
-        <Styled.Header>
-          <div>Spotlist</div>
-          <Styled.Button onClick={() => setOnTracklistPage(true)}>Tracklist</Styled.Button>
-          <Styled.Button onClick={() => setOnTracklistPage(false)}>Analysis</Styled.Button>
-          {loggedIn 
-            ? 
-            <Select defaultValue={selectedPlaylist} onChange={setSelectedPlaylist} options={playlistOptions} />
-            : 
-            <Link href="/api/login"><Styled.Button>Sign in</Styled.Button></Link>
-          }
-        </Styled.Header>
+            {loggedIn 
+              ? 
+              <Select defaultValue={selectedPlaylist} onChange={setSelectedPlaylist} options={playlistOptions} />
+              : 
+              <Link href="/api/login"><Styled.Button>Sign in</Styled.Button></Link>
+            }
+          </Styled.Header>
 
-        {onTracklistPage 
-          ?
-          <Tracklist name={selectedPlaylist} owner="who" tracks={tracks} ShowAlert={ShowAlert} copiedRef={copied} />
-          :
-          <Analysis artists={artists} genres={genres} /> 
-        }
-        
-        
-      </Styled.Container>}
+          <Styled.Content>
+            {tracks.length 
+              ? (onTracklistPage 
+                ? <Tracklist name={selectedPlaylist} owner="who" tracks={tracks} />
+                : <Analysis artists={artists} genres={genres} /> 
+              )
+              : <div>select a playlist</div>
+            }
+            
+          </Styled.Content>
+          
+          
+        </Styled.Container>
+      }
     </main>
   )
 }

@@ -24,6 +24,16 @@ export const Button = styled.button`
 `
 
 export const Container = styled.div`
+    display: grid;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    grid-template-columns: auto;
+    grid-template-rows: 50px auto;
+    grid-template-areas: 
+        "nav"
+        "bdy";
+    overflow: hidden;
 `
 
 export const Header = styled.header`
@@ -36,6 +46,16 @@ export const Header = styled.header`
     justify-content: space-between;
     align-items: center;
     background: rgba(255, 255, 255, 30%);
+`
+
+export const Content = styled.div`
+    grid-area: bdy;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    scrollbar-color: transparent;
+    > section {
+        margin: 0 30px;
+    }
 `
 
 export const Alert = styled.div`
@@ -54,4 +74,14 @@ export const Alert = styled.div`
     border-radius: 50px;
     font-weight: bold;
     transition: all 0.3s ease; 
+`
+
+export const Flex = styled.div`
+    display: flex;
+`
+
+export const Justified = styled(Flex)`
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
 `

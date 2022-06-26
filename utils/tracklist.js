@@ -1,10 +1,20 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import { Icon } from '@iconify/react'
 
 import * as Styled from '../styles/tracklist'
+import * as General from '../styles/general'
+
+// const CopyButton = (element, ref) => {
+
+
+//     return (
+        
+//     )
+// }
 
 const Tracklist = (props) => {
-    const {name, owner, tracks, ShowAlert, copiedRef} = props
+    const {name, owner, tracks} = props
+    const copied = useRef(null)
 
     const TracksToCSV = (tracks) => {
         let csvTracks = tracks.map(row => 
@@ -28,7 +38,7 @@ const Tracklist = (props) => {
         pom.click()
     }
 
-    // For copy to clipboard button
+    // Copy to clipboard action
     const CopyToClipboard = (element) => {
         var range = document.createRange()
         range.selectNode(document.getElementById( element ))
@@ -38,18 +48,28 @@ const Tracklist = (props) => {
         window.getSelection().removeAllRanges()
     }
 
+    // Disply copied alert
+    const ShowAlert = (ref) => {
+        ref.current.style.opacity = 1
+        ref.current.style.display = "block"
+        setTimeout(() => ref.current.style.opacity = 0, 300)
+        setTimeout(() => ref.current.style.display = "none", 400)
+    }
+
+    // Copy button component
+    const CopyButton = ({ element }) => 
+    <General.Button onClick={() => {CopyToClipboard(element); ShowAlert(copied)}}>
+        <Icon icon="bx:copy" width="20px" />
+    </General.Button>
+
+
     return (
-        <section className="results" id="results">
-            {tracks.length ? 
+        <Styled.Tracklist>
+            <General.Alert ref={copied}>Copied!</General.Alert>
+                <General.Button onClick={(e) => DownloadCSV(e)} id='download'>Download tracklist as CSV</General.Button>
 
-            <div>
-            <div id='resultsheader'>
-                <h1 id="playlistName"><a href={name.link} target="_blank" rel="noopener noreferrer">{name.label}</a> by <a href={owner.link} target="_blank" rel="noopener noreferrer">{owner.owner}</a></h1>
-                <button onClick={(e) => DownloadCSV(e)} id='download'>Download as CSV</button>
-            </div>
-
-            <table className="tracklisting" id="tracktable">
-                <thead id='trackhead'>
+            <Styled.Table id="tracktable">
+                <Styled.TableHead id='trackhead'>
                     <tr>
                         <th>#</th>
                         <th>Track</th>
@@ -57,60 +77,59 @@ const Tracklist = (props) => {
                         <th>Album</th>
                         <th>Added on</th>
                     </tr>
-                </thead>
+                </Styled.TableHead>
             
-                <tbody>
+                <Styled.TableBody>
                     {tracks.map((track, index) => ( 
                         <tr key={index}>
                             <td label="#">{index+1}</td>
 
                             <td label="Track">
-                                <div className="justify">
-                                    <div id={`${index}trackname`}><a href={track.track ? track.track.external_urls.spotify : null} target="_blank" rel="noopener noreferrer"> {track.track ? track.track.name : null}</a></div>
-                                    <button onClick={() => {CopyToClipboard(`${index}trackname`); ShowAlert(copiedRef)}}>
-                                        <Icon icon="bx:copy" width="20px" />
-                                    </button>
-                                </div>
+                                <General.Justified>
+                                    <div id={`${index}trackname`}>
+                                        <General.Link href={track.track ? track.track.external_urls.spotify : null} target="_blank" rel="noopener noreferrer"> {track.track ? track.track.name : null}</General.Link>
+                                    </div>
+                                    <CopyButton element={`${index}trackname`} />
+                                </General.Justified>
                             </td>
 
                             <td label="Artist">
-                                <div className="justify">
+                                <General.Justified>
                                     <div id={`${index}artistname`}>
-                                        {track.track ? track.track.artists.map((artist, index) => (
-                                        index === 0 ? 
-                                        <span key={index}><a href={track.track.artists[index].external_urls.spotify || null} target="_blank" rel="noopener noreferrer">{artist.name}</a></span> : 
-                                        <span key={index}>, <a href={track.track.artists[index].external_urls.spotify || null} target="_blank" rel="noopener noreferrer">{artist.name}</a></span>
-                                        )) : null}
+                                        {track.track 
+                                            ? track.track.artists.map((artist, index) => (
+                                                index === 0 
+                                                    ? <span key={index}>
+                                                        <General.Link href={track.track.artists[index].external_urls.spotify || null} target="_blank" rel="noopener noreferrer">{artist.name}</General.Link>
+                                                    </span> 
+                                                    : <span key={index}>, 
+                                                        <General.Link href={track.track.artists[index].external_urls.spotify || null} target="_blank" rel="noopener noreferrer">{artist.name}</General.Link>
+                                                    </span>
+                                            )) 
+                                            : null
+                                        }
                                     </div>
-                                    <button onClick={() => {CopyToClipboard(`${index}artistname`); ShowAlert(copiedRef)}}>
-                                        <Icon icon="bx:copy" width="20px" />
-                                    </button>
-                                </div>
+                                    <CopyButton element={`${index}artistname`} />
+                                </General.Justified>
                             </td>
 
                             <td label="Album">
-                                <div className="justify">
-                                    <div id={`${index}albumname`}><a href={track.track ? track.track.album.external_urls.spotify : null} target="_blank" rel="noopener noreferrer">{track.track ? track.track.album.name: null}</a></div>
-                                    <button onClick={() => {CopyToClipboard(`${index}albumname`); ShowAlert(copiedRef)}}>
-                                        <Icon icon="bx:copy" width="20px" />
-                                    </button>
-                                </div>
+                                <General.Justified>
+                                    <div id={`${index}albumname`}>
+                                        <General.Link href={track.track ? track.track.album.external_urls.spotify : null} target="_blank" rel="noopener noreferrer">{track.track ? track.track.album.name: null}</General.Link>
+                                    </div>
+                                    <CopyButton element={`${index}albumname`} />
+                                </General.Justified>
                             </td>
 
-                            <td label="Added on">{track.added_at.substring(5,7)}/{track.added_at.substring(8,10)}/{track.added_at.substring(0,4)}</td>
+                            <td label="Added on">
+                                {track.added_at.substring(5,7)}/{track.added_at.substring(8,10)}/{track.added_at.substring(0,4)}
+                            </td>
                         </tr> || null
                     ))}
-                </tbody>
-            </table>
-
-            {/* <button type='button' className="gotop" onClick={(e) => ScrollUp(e)}>
-                <Icon icon="akar-icons:circle-chevron-up-fill"  width="50px" />
-            </button> */}
-            </div>
-            :
-            <div>select a playlist</div>
-            }
-        </section>
+                </Styled.TableBody>
+            </Styled.Table>
+        </Styled.Tracklist>
     )
 }
 
