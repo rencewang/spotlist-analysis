@@ -1,16 +1,13 @@
 import styled from "styled-components"
 
 export const Tracklist = styled.section`
-    > button {
-        padding: 0;
-    }
 `
 
 export const Table = styled.table`
     width: 100%;
     border-radius: 10px;
     border-spacing: 0;
-    margin: 30px 0 80px 0;
+    margin: 10px 0 80px 0;
 
     button {
         &:active {

@@ -4,14 +4,6 @@ import { Icon } from '@iconify/react'
 import * as Styled from '../styles/tracklist'
 import * as General from '../styles/general'
 
-// const CopyButton = (element, ref) => {
-
-
-//     return (
-        
-//     )
-// }
-
 const Tracklist = (props) => {
     const {name, owner, tracks} = props
     const copied = useRef(null)
@@ -34,7 +26,7 @@ const Tracklist = (props) => {
         // Create a link to download it
         var pom = document.createElement('a')
         pom.href = url
-        pom.setAttribute('download', `spotlist-export-${name}.csv`)
+        pom.setAttribute('download', `spotlist-export-${name.label}.csv`)
         pom.click()
     }
 
@@ -66,7 +58,7 @@ const Tracklist = (props) => {
     return (
         <Styled.Tracklist>
             <General.Alert ref={copied}>Copied!</General.Alert>
-                <General.Button onClick={(e) => DownloadCSV(e)} id='download'>Download tracklist as CSV</General.Button>
+            <General.Button className="download" onClick={(e) => DownloadCSV(e)}>Download tracklist as CSV</General.Button>
 
             <Styled.Table id="tracktable">
                 <Styled.TableHead id='trackhead'>
