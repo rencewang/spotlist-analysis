@@ -116,7 +116,7 @@ const Home = () => {
             {tracks.length 
               ? (onTracklistPage 
                 ? <Tracklist name={selectedPlaylist} tracks={tracks} />
-                : <Analysis artists={artists} genres={genres} /> 
+                : <Analysis name={selectedPlaylist} artists={artists} genres={genres} /> 
               )
               : (loggedIn 
                 ? <div>select a playlist</div>

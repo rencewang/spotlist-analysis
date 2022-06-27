@@ -20,17 +20,17 @@ const Tracklist = (props) => {
         return ("track_name, artists, album_name, added_at \r\n" + csvTracks)
     }
 
-    const DownloadCSV = (event) => {
+    const DownloadCSV = (event, generate_function, name) => {
         event.preventDefault()
         // Create a blob
-        var blob = new Blob([TracksToCSV(tracks)], { type: 'text/csv;charset=utf-8;' })
+        var blob = new Blob([generate_function], { type: 'text/csv;charset=utf-8;' })
         var url = URL.createObjectURL(blob)
         // Create a link to download it
         var pom = document.createElement('a')
         pom.href = url
-        pom.setAttribute('download', `spotlist-export-${name.label}.csv`)
+        pom.setAttribute('download', `spotlist-tracks-${name}.csv`)
         pom.click()
-    }
+      }
 
     // Copy to clipboard action
     const CopyToClipboard = (element) => {
@@ -60,7 +60,7 @@ const Tracklist = (props) => {
     return (
         <Styled.Page>
             <General.Alert ref={copied}>Copied!</General.Alert>
-            <General.Button className="download" onClick={(e) => DownloadCSV(e)}>Download tracklist as CSV</General.Button>
+            <General.Button className="download" onClick={(e) => DownloadCSV(e, TracksToCSV(), name.label)}>Download tracklist as CSV</General.Button>
 
             <Styled.Table id="tracktable">
                 <Styled.TableHead id='trackhead'>
