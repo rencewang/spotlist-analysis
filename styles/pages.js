@@ -1,10 +1,12 @@
 import styled from "styled-components"
 
-export const Tracklist = styled.section`
+export const Page = styled.section`
+    margin: 0 30px;
 `
 
 export const Table = styled.table`
     width: 100%;
+    height: fit-content;
     border-radius: 10px;
     border-spacing: 0;
     margin: 10px 0 80px 0;
@@ -42,3 +44,10 @@ export const TableBody = styled.tbody`
     }
 `
 
+export const AnalysisTables = styled.div`
+    display: flex;
+    flex-direction: row;
+    > table {
+        width: 50% !important;
+    }
+`

@@ -46,7 +46,8 @@ const chunk = (arr, size) =>
 
 export const getGenresFromArtists = async (artistIds) => {
   // artists can only be called with maximum of 50
-  const artistIdsList = chunk(artistIds, 50).map(e => e.join(','))
+  console.log(artistIds)
+  const artistIdsList = chunk(artistIds, 50).map(e => e.filter(e => e && e.length).join(','))
 
   try {
     const token_response = await axios.get('/api/token')

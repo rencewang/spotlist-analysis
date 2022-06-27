@@ -1,11 +1,13 @@
 import React, { useRef } from 'react'
 import { Icon } from '@iconify/react'
 
-import * as Styled from '../styles/tracklist'
+import * as Styled from '../styles/pages'
 import * as General from '../styles/general'
 
+// still needed: loading indicator
+
 const Tracklist = (props) => {
-    const {name, owner, tracks} = props
+    const {name, tracks} = props
     const copied = useRef(null)
 
     const TracksToCSV = (tracks) => {
@@ -56,7 +58,7 @@ const Tracklist = (props) => {
 
 
     return (
-        <Styled.Tracklist>
+        <Styled.Page>
             <General.Alert ref={copied}>Copied!</General.Alert>
             <General.Button className="download" onClick={(e) => DownloadCSV(e)}>Download tracklist as CSV</General.Button>
 
@@ -121,7 +123,7 @@ const Tracklist = (props) => {
                     ))}
                 </Styled.TableBody>
             </Styled.Table>
-        </Styled.Tracklist>
+        </Styled.Page>
     )
 }
 

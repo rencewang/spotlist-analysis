@@ -4,7 +4,7 @@ export const Link = styled.a`
     color: inherit;
     text-decoration: none;
     &: hover { 
-    color: #000; 
+        color: #000; 
     }
     transition: color 0.3s ease; 
 `
@@ -18,7 +18,7 @@ export const Button = styled.button`
     border: none;
     background-color: transparent;
     &: hover { 
-    color: #000; 
+        color: #000; 
     }
     transition: color 0.3s ease; 
 `
@@ -53,9 +53,6 @@ export const Content = styled.div`
     overflow-x: hidden;
     overflow-y: scroll;
     scrollbar-color: transparent;
-    > section {
-        margin: 0 30px;
-    }
 `
 
 export const Alert = styled.div`

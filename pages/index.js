@@ -9,7 +9,7 @@ import Tracklist from '../utils/tracklist'
 import Analysis from '../utils/analysis'
 import * as Styled from '../styles/general'
 
-export default function Home() {
+const Home = () => {
   const [isLoading, setIsLoading] = useState(true)
   const [loggedIn, setLoggedIn] = useState(false)
   const [onTracklistPage, setOnTracklistPage] = useState(true)
@@ -53,7 +53,6 @@ export default function Home() {
   // fill tracks and artists when new playlist selected
   useEffect(() => {
     if (selectedPlaylist) fillTracksArtistsGenres(selectedPlaylist.value)
-    console.log(selectedPlaylist)
   }, [selectedPlaylist])
 
   const fillTracksArtistsGenres = async (url) => {
@@ -92,17 +91,15 @@ export default function Home() {
   return (
     <main>
       <Head>
-        <title>Spotlist Analysis</title>
+        <title>Spotlist</title>
         <meta name="description" content="Get Playlist Analysis for Spotify" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       
 
       {isLoading 
-        ? 
-        <div>loading...</div> 
-        : 
-        <Styled.Container>
+      ? <div>loading...</div> 
+      : <Styled.Container>
           <Styled.Header>
             <Styled.Flex>
               <Styled.Button onClick={() => setOnTracklistPage(true)}>Tracklist</Styled.Button>
@@ -110,27 +107,28 @@ export default function Home() {
             </Styled.Flex>
 
             {loggedIn 
-              ? 
-              <Select defaultValue={selectedPlaylist} onChange={setSelectedPlaylist} options={playlistOptions} />
-              : 
-              <Link href="/api/login"><Styled.Button>Sign in</Styled.Button></Link>
+              ? <Select defaultValue={selectedPlaylist} onChange={setSelectedPlaylist} options={playlistOptions} />
+              : <Link href="/api/login"><Styled.Button>Sign in</Styled.Button></Link>
             }
           </Styled.Header>
 
           <Styled.Content>
             {tracks.length 
               ? (onTracklistPage 
-                ? <Tracklist name={selectedPlaylist} owner="who" tracks={tracks} />
+                ? <Tracklist name={selectedPlaylist} tracks={tracks} />
                 : <Analysis artists={artists} genres={genres} /> 
               )
-              : <div>select a playlist</div>
+              : (loggedIn 
+                ? <div>select a playlist</div>
+                : <div>log in with Spotify to see your playlists</div>
+              )
             }
             
           </Styled.Content>
-          
-          
-        </Styled.Container>
+      </Styled.Container>
       }
     </main>
   )
 }
+
+export default Home
