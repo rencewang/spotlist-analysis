@@ -82,3 +82,22 @@ export const Justified = styled(Flex)`
     justify-content: space-between;
     align-items: center;
 `
+
+export const SelectOptions = {
+    control: (provided) => ({
+        ...provided,
+        width: 300,
+    })
+}
+
+export const SelectTheme = (theme) => ({
+    ...theme,
+    borderRadius: 10,
+    colors: {
+      ...theme.colors,
+      neutral0: 'white',
+      primary25: 'gray',
+      primary50: 'gray',
+      primary: 'black',
+    },
+})

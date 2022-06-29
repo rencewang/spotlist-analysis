@@ -107,7 +107,13 @@ const Home = () => {
             </Styled.Flex>
 
             {loggedIn 
-              ? <Select defaultValue={selectedPlaylist} onChange={setSelectedPlaylist} options={playlistOptions} />
+              ? <Select 
+                  defaultValue={selectedPlaylist} 
+                  onChange={setSelectedPlaylist} 
+                  options={playlistOptions} 
+                  styles={Styled.SelectOptions}
+                  theme={(theme) => Styled.SelectTheme(theme)}
+                />
               : <Link href="/api/login"><Styled.Button>Sign in</Styled.Button></Link>
             }
           </Styled.Header>

@@ -20,7 +20,7 @@ export const Table = styled.table`
 `
 
 export const TableHead = styled.thead`
-    z-index: 999;
+    // z-index: 999;
     position: -webkit-sticky; /* Safari */
     position: sticky;
     top: 0;
