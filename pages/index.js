@@ -25,8 +25,13 @@ const Home = () => {
       // user is logged in if there is a refresh token stored
       if (getCookies('token').token) { 
         await fillPlaylists()
+        console.log("setting to true")
         setLoggedIn(true)
+      } else {
+        console.log("setting to false")
+        setLoggedIn(false)
       }
+      console.log("loading false")
       setIsLoading(false)
     })()
   }, [])
@@ -112,13 +117,16 @@ const Home = () => {
           </Styled.Flex>
 
           {loggedIn 
-            ? <Select 
+            ? <div>
+              <Select 
                 defaultValue={selectedPlaylist} 
                 onChange={setSelectedPlaylist} 
                 options={playlistOptions} 
                 styles={Styled.SelectOptions}
                 theme={(theme) => Styled.SelectTheme(theme)}
               />
+              <Link href="/api/logout"><Styled.Button>Sign out</Styled.Button></Link>
+              </div>
             : <Link href="/api/login"><Styled.Button>Sign in</Styled.Button></Link>
           }
         </Styled.Header>
