@@ -58,7 +58,7 @@ const Tracklist = (props) => {
 
     return (
         <Styled.Page>
-            <General.Button className="download" onClick={(e) => {DownloadCSV(e, TracksToCSV(), name.label); ShowAlert(downloaded)}}>Download tracklist as CSV</General.Button>
+            <General.Button className="download" onClick={(e) => {DownloadCSV(e, TracksToCSV(tracks), name.label); ShowAlert(downloaded)}}>Download tracklist as CSV</General.Button>
 
             <Styled.Table id="tracktable">
                 <Styled.TableHead id='trackhead'>

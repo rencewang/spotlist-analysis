@@ -133,8 +133,8 @@ const Home = () => {
                 : <Analysis name={selectedPlaylist} artists={artists} genres={genres} downloaded={downloaded} /> 
               )
               : (loggedIn 
-                ? <div>select a playlist</div>
-                : <div>log in with Spotify to see your playlists</div>
+                ? <Styled.FullPage><div>Select a playlist</div></Styled.FullPage>
+                : <Styled.FullPage><div>Log in with Spotify to see your playlists</div></Styled.FullPage>
               )
             )
           }
