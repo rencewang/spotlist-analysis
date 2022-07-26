@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState, useRef } from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
 import { getCookies } from 'cookies-next'
@@ -53,6 +53,7 @@ const Home = () => {
   // fill tracks and artists when new playlist selected
   useEffect(() => {
     if (selectedPlaylist) fillTracksArtistsGenres(selectedPlaylist.value)
+    setIsLoading(true)
   }, [selectedPlaylist])
 
   const fillTracksArtistsGenres = async (url) => {
@@ -86,7 +87,11 @@ const Home = () => {
     setTracks(tracks_response)
     setArtists(artists_sort)
     setGenres(genres_sort)
+    setIsLoading(false)
   }
+
+  const copied = useRef(null)
+  const downloaded = useRef(null)
 
   return (
     <main>
@@ -96,43 +101,45 @@ const Home = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       
+      <Styled.Container>
+        <Styled.Alert ref={copied}>Copied!</Styled.Alert>
+        <Styled.Alert ref={downloaded}>Download started!</Styled.Alert>
 
-      {isLoading 
-      ? <div>loading...</div> 
-      : <Styled.Container>
-          <Styled.Header>
-            <Styled.Flex>
-              <Styled.Button onClick={() => setOnTracklistPage(true)}>Tracklist</Styled.Button>
-              <Styled.Button onClick={() => setOnTracklistPage(false)}>Analysis</Styled.Button>
-            </Styled.Flex>
+        <Styled.Header>
+          <Styled.Flex>
+            <Styled.Button onClick={() => setOnTracklistPage(true)}>Tracklist</Styled.Button>
+            <Styled.Button onClick={() => setOnTracklistPage(false)}>Analysis</Styled.Button>
+          </Styled.Flex>
 
-            {loggedIn 
-              ? <Select 
-                  defaultValue={selectedPlaylist} 
-                  onChange={setSelectedPlaylist} 
-                  options={playlistOptions} 
-                  styles={Styled.SelectOptions}
-                  theme={(theme) => Styled.SelectTheme(theme)}
-                />
-              : <Link href="/api/login"><Styled.Button>Sign in</Styled.Button></Link>
-            }
-          </Styled.Header>
+          {loggedIn 
+            ? <Select 
+                defaultValue={selectedPlaylist} 
+                onChange={setSelectedPlaylist} 
+                options={playlistOptions} 
+                styles={Styled.SelectOptions}
+                theme={(theme) => Styled.SelectTheme(theme)}
+              />
+            : <Link href="/api/login"><Styled.Button>Sign in</Styled.Button></Link>
+          }
+        </Styled.Header>
 
-          <Styled.Content>
-            {tracks.length 
+        <Styled.Content>
+          {isLoading 
+            ? <Styled.FullPage><div>Loading, please wait...</div></Styled.FullPage> 
+            : 
+            (tracks.length
               ? (onTracklistPage 
-                ? <Tracklist name={selectedPlaylist} tracks={tracks} />
-                : <Analysis name={selectedPlaylist} artists={artists} genres={genres} /> 
+                ? <Tracklist name={selectedPlaylist} tracks={tracks} copied={copied} downloaded={downloaded} />
+                : <Analysis name={selectedPlaylist} artists={artists} genres={genres} downloaded={downloaded} /> 
               )
               : (loggedIn 
                 ? <div>select a playlist</div>
                 : <div>log in with Spotify to see your playlists</div>
               )
-            }
-            
-          </Styled.Content>
+            )
+          }
+        </Styled.Content>
       </Styled.Container>
-      }
     </main>
   )
 }

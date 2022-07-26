@@ -55,22 +55,32 @@ export const Content = styled.div`
     scrollbar-color: transparent;
 `
 
+export const FullPage = styled.div`
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    div {
+        width: fit-content;
+        margin: auto;
+        font-weight: bold;
+    }
+`
+
 export const Alert = styled.div`
     z-index: 9999;
     display: none;
     opacity: 0;
     width: fit-content;
-    height: 40px;
     position: fixed;
-    top: 100px;
-    left: 0;
-    right: 0;
+    bottom: 30px;
+    left: 30px;
     padding: 10px 30px;
-    margin: 0 auto;
     background-color: rgba(255, 255, 255, 100%);
-    border-radius: 50px;
+    border-radius: 10px;
+    border: 2px solid black;
     font-weight: bold;
-    transition: all 0.3s ease; 
+    transition: all 1s ease; 
 `
 
 export const Flex = styled.div`
@@ -96,8 +106,8 @@ export const SelectTheme = (theme) => ({
     colors: {
       ...theme.colors,
       neutral0: 'white',
-      primary25: 'gray',
-      primary50: 'gray',
+      primary25: '#C0C0C0',
+      primary50: '#C0C0C0',
       primary: 'black',
     },
 })

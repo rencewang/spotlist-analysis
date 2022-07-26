@@ -7,8 +7,7 @@ import * as General from '../styles/general'
 // still needed: loading indicator
 
 const Tracklist = (props) => {
-    const {name, tracks} = props
-    const copied = useRef(null)
+    const {name, tracks, copied, downloaded} = props
 
     const TracksToCSV = (tracks) => {
         let csvTracks = tracks.map(row => 
@@ -42,7 +41,7 @@ const Tracklist = (props) => {
         window.getSelection().removeAllRanges()
     }
 
-    // Disply copied alert
+    // Disply copied & downloaded alert
     const ShowAlert = (ref) => {
         ref.current.style.opacity = 1
         ref.current.style.display = "block"
@@ -59,8 +58,7 @@ const Tracklist = (props) => {
 
     return (
         <Styled.Page>
-            <General.Alert ref={copied}>Copied!</General.Alert>
-            <General.Button className="download" onClick={(e) => DownloadCSV(e, TracksToCSV(), name.label)}>Download tracklist as CSV</General.Button>
+            <General.Button className="download" onClick={(e) => {DownloadCSV(e, TracksToCSV(), name.label); ShowAlert(downloaded)}}>Download tracklist as CSV</General.Button>
 
             <Styled.Table id="tracktable">
                 <Styled.TableHead id='trackhead'>

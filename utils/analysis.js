@@ -4,7 +4,7 @@ import * as Styled from '../styles/pages'
 import * as General from '../styles/general'
 
 const Analysis = (props) => {
-    const {name, artists, genres} = props
+    const {name, artists, genres, downloaded} = props
     console.log(artists)
     console.log(genres)
 
@@ -34,10 +34,18 @@ const Analysis = (props) => {
       pom.setAttribute('download', `spotlist-analysis-${name}.csv`)
       pom.click()
     }
+
+    // Disply copied & downloaded alert
+    const ShowAlert = (ref) => {
+      ref.current.style.opacity = 1
+      ref.current.style.display = "block"
+      setTimeout(() => ref.current.style.opacity = 0, 300)
+      setTimeout(() => ref.current.style.display = "none", 400)
+    }
     
     return (
         <Styled.Page>
-        <General.Button className="download" onClick={(e) => DownloadCSV(e, AnalysisToCSV(), name.label)}>Download analysis as CSV</General.Button>
+        <General.Button className="download" onClick={(e) => {DownloadCSV(e, AnalysisToCSV(), name.label); ShowAlert(downloaded)}}>Download full analysis as CSV</General.Button>
 
           <Styled.AnalysisTables>
             <Styled.Table>
@@ -49,7 +57,7 @@ const Analysis = (props) => {
                 </tr>
               </Styled.TableHead>
               <Styled.TableBody>
-                {artists.slice(0, 20).map((item, index) => (
+                {artists.slice(0, 30).map((item, index) => (
                   <tr key={index}>
                     <td>{index+1}</td>
                     <td>{item.name}</td>
@@ -68,7 +76,7 @@ const Analysis = (props) => {
                 </tr>
               </Styled.TableHead>
               <Styled.TableBody>
-                {genres.slice(0, 20).map((item, index) => (
+                {genres.slice(0, 30).map((item, index) => (
                   <tr key={index}>
                     <td>{index+1}</td>
                     <td>{item.name}</td>
