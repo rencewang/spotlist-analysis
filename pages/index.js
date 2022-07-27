@@ -10,8 +10,8 @@ import Analysis from '../utils/analysis'
 import * as Styled from '../styles/general'
 
 const Home = () => {
-  const [isLoading, setIsLoading] = useState(true)
-  const [loggedIn, setLoggedIn] = useState(false)
+  const [isTracksLoading, setIsTracksLoading] = useState(false)
+  const [loggedIn, setLoggedIn] = useState(null)
   const [onTracklistPage, setOnTracklistPage] = useState(true)
 
   useEffect(() => { 
@@ -24,15 +24,11 @@ const Home = () => {
     (async () => {
       // user is logged in if there is a refresh token stored
       if (getCookies('token').token) { 
-        await fillPlaylists()
-        console.log("setting to true")
         setLoggedIn(true)
+        await fillPlaylists()
       } else {
-        console.log("setting to false")
         setLoggedIn(false)
       }
-      console.log("loading false")
-      setIsLoading(false)
     })()
   }, [])
 
@@ -58,10 +54,10 @@ const Home = () => {
   // fill tracks and artists when new playlist selected
   useEffect(() => {
     if (selectedPlaylist) fillTracksArtistsGenres(selectedPlaylist.value)
-    setIsLoading(true)
   }, [selectedPlaylist])
 
   const fillTracksArtistsGenres = async (url) => {
+    setIsTracksLoading(true)
     let artists = []
     let artists_ids = []
     let artists_count = {}
@@ -92,7 +88,7 @@ const Home = () => {
     setTracks(tracks_response)
     setArtists(artists_sort)
     setGenres(genres_sort)
-    setIsLoading(false)
+    setIsTracksLoading(false)
   }
 
   const copied = useRef(null)
@@ -106,6 +102,7 @@ const Home = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       
+      {loggedIn !== null &&
       <Styled.Container>
         <Styled.Alert ref={copied}>Copied!</Styled.Alert>
         <Styled.Alert ref={downloaded}>Download started!</Styled.Alert>
@@ -117,7 +114,8 @@ const Home = () => {
           </Styled.Flex>
 
           {loggedIn 
-            ? <div>
+            ? 
+            <>
               <Select 
                 defaultValue={selectedPlaylist} 
                 onChange={setSelectedPlaylist} 
@@ -126,28 +124,30 @@ const Home = () => {
                 theme={(theme) => Styled.SelectTheme(theme)}
               />
               <Link href="/api/logout"><Styled.Button>Sign out</Styled.Button></Link>
-              </div>
+            </>
             : <Link href="/api/login"><Styled.Button>Sign in</Styled.Button></Link>
           }
         </Styled.Header>
 
         <Styled.Content>
-          {isLoading 
+          {isTracksLoading 
             ? <Styled.FullPage><div>Loading, please wait...</div></Styled.FullPage> 
-            : 
-            (tracks.length
+            : (tracks.length
               ? (onTracklistPage 
                 ? <Tracklist name={selectedPlaylist} tracks={tracks} copied={copied} downloaded={downloaded} />
                 : <Analysis name={selectedPlaylist} artists={artists} genres={genres} downloaded={downloaded} /> 
               )
               : (loggedIn 
-                ? <Styled.FullPage><div>Select a playlist</div></Styled.FullPage>
+                ? (selectedPlaylist 
+                  ? <Styled.FullPage><div>This playlist seems empty, try a different one...</div></Styled.FullPage>
+                  : <Styled.FullPage><div>Select a playlist</div></Styled.FullPage>) 
                 : <Styled.FullPage><div>Log in with Spotify to see your playlists</div></Styled.FullPage>
               )
             )
           }
         </Styled.Content>
       </Styled.Container>
+      }
     </main>
   )
 }
