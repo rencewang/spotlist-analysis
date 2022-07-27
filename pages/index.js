@@ -60,13 +60,16 @@ const Home = () => {
   }, [selectedPlaylist])
 
   const fillTracksArtistsGenres = async (url) => {
-    setIsTracksLoading(true)
     let artists = []
     let artists_ids = []
     let artists_count = {}
 
-    // get artists from tracks and genres from artists
+    setIsTracksLoading(true)
     const tracks_response = await getTracks(url)
+    setTracks(tracks_response)
+    setIsTracksLoading(false)
+
+    // get artists from tracks and genres from artists
     tracks_response.forEach(track => {
       track.track.artists.forEach(artist => {
         artists.push(artist)
@@ -74,8 +77,6 @@ const Home = () => {
         artists_count[artist.name] = (artists_count[artist.name] || 0) + 1
       })
     })
-    setTracks(tracks_response)
-    setIsTracksLoading(false)
 
     // sort artists and genres by occurrence in playlist
     let genre_response = await getGenresFromArtists(artists_ids)
@@ -117,8 +118,7 @@ const Home = () => {
           </Styled.Flex>
 
           {loggedIn 
-            ? 
-            <>
+            ? <Styled.Flex>
               <Select 
                 defaultValue={selectedPlaylist} 
                 onChange={setSelectedPlaylist} 
@@ -127,8 +127,8 @@ const Home = () => {
                 isLoading={isPlaylistsLoading}
                 theme={(theme) => Styled.SelectTheme(theme)}
               />
-              <Link href="/api/logout"><Styled.Button>Sign out</Styled.Button></Link>
-            </>
+              <Link href="/api/logout"><Styled.Button style={{paddingLeft: "20px"}}>Sign out</Styled.Button></Link>
+            </Styled.Flex>
             : <Link href="/api/login"><Styled.Button>Sign in</Styled.Button></Link>
           }
         </Styled.Header>

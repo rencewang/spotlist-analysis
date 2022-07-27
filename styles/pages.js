@@ -20,10 +20,11 @@ export const Table = styled.table`
 `
 
 export const TableHead = styled.thead`
-    // z-index: 999;
+    z-index: 100;
     position: -webkit-sticky; /* Safari */
     position: sticky;
     top: 0;
+    background-color: white;
 
     th {
         text-align: left;
@@ -44,10 +45,52 @@ export const TableBody = styled.tbody`
     }
 `
 
+export const TracklistTableHead = styled(TableHead)`
+    @media screen and (max-width: 700px) {
+        display: none;
+    }
+`
+
+export const TracklistTableBody = styled(TableBody)`
+    @media screen and (max-width: 700px) {
+        display: flex;
+        flex-direction: column;
+        tr {
+            border-bottom: 2px solid;
+            td {
+                display: flex;
+                padding: 5px 20px;
+                &:nth-of-type(2) {
+                    padding-top: 30px;
+                }
+                &:last-of-type {
+                    padding-bottom: 30px;
+                }
+                &::before {
+                    content: attr(label);
+                    font-weight: bold;
+                    width: 120px;
+                    min-width: 120px;
+                }
+                &[label="#"] {
+                    display: none;
+                }
+            }
+        }
+    }
+`
+
 export const AnalysisTables = styled.div`
     display: flex;
     flex-direction: row;
     > table {
         width: 50% !important;
+    }
+
+    @media screen and (max-width: 700px) {
+        flex-direction: column;
+        > table {
+            width: 100% !important;
+        }
     }
 `

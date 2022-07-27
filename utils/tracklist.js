@@ -61,7 +61,7 @@ const Tracklist = (props) => {
             <General.Button className="download" onClick={(e) => {DownloadCSV(e, TracksToCSV(tracks), name.label); ShowAlert(downloaded)}}>Download tracklist as CSV</General.Button>
 
             <Styled.Table id="tracktable">
-                <Styled.TableHead id='trackhead'>
+                <Styled.TracklistTableHead id='trackhead'>
                     <tr>
                         <th>#</th>
                         <th>Track</th>
@@ -69,9 +69,9 @@ const Tracklist = (props) => {
                         <th>Album</th>
                         <th>Added on</th>
                     </tr>
-                </Styled.TableHead>
+                </Styled.TracklistTableHead>
             
-                <Styled.TableBody>
+                <Styled.TracklistTableBody>
                     {tracks.map((track, index) => ( 
                         <tr key={index}>
                             <td label="#">{index+1}</td>
@@ -94,7 +94,7 @@ const Tracklist = (props) => {
                                                     ? <span key={index}>
                                                         <General.Link href={track.track.artists[index].external_urls.spotify || null} target="_blank" rel="noopener noreferrer">{artist.name}</General.Link>
                                                     </span> 
-                                                    : <span key={index}>, 
+                                                    : <span key={index}>,&nbsp;
                                                         <General.Link href={track.track.artists[index].external_urls.spotify || null} target="_blank" rel="noopener noreferrer">{artist.name}</General.Link>
                                                     </span>
                                             )) 
@@ -119,7 +119,7 @@ const Tracklist = (props) => {
                             </td>
                         </tr> || null
                     ))}
-                </Styled.TableBody>
+                </Styled.TracklistTableBody>
             </Styled.Table>
         </Styled.Page>
     )

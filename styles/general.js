@@ -97,6 +97,17 @@ export const SelectOptions = {
     control: (provided) => ({
         ...provided,
         width: 300,
+    }),
+    menu: (provided) => ({
+        ...provided,
+        zIndex: 999,
+    }),
+    menuList: (provided) => ({
+        ...provided,
+        "::-webkit-scrollbar": {
+          width: "0px",
+          height: "0px",
+        }
     })
 }
 
