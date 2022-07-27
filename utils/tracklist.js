@@ -45,8 +45,8 @@ const Tracklist = (props) => {
     const ShowAlert = (ref) => {
         ref.current.style.opacity = 1
         ref.current.style.display = "block"
-        setTimeout(() => ref.current.style.opacity = 0, 300)
-        setTimeout(() => ref.current.style.display = "none", 400)
+        setTimeout(() => ref.current.style.opacity = 0, 500)
+        setTimeout(() => ref.current.style.display = "none", 700)
     }
 
     // Copy button component

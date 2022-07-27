@@ -71,9 +71,11 @@ const Home = () => {
         artists_count[artist.name] = (artists_count[artist.name] || 0) + 1
       })
     })
-    let genre_response = await getGenresFromArtists(artists_ids)
+    setTracks(tracks_response)
+    setIsTracksLoading(false)
 
     // sort artists and genres by occurrence in playlist
+    let genre_response = await getGenresFromArtists(artists_ids)
     let artists_sort = []
     let genres_sort = []
     Object.keys(artists_count).forEach(artist => {
@@ -85,10 +87,8 @@ const Home = () => {
     artists_sort.sort((a, b) => {return b.count - a.count})
     genres_sort.sort((a, b) => {return b.count - a.count})
 
-    setTracks(tracks_response)
     setArtists(artists_sort)
     setGenres(genres_sort)
-    setIsTracksLoading(false)
   }
 
   const copied = useRef(null)

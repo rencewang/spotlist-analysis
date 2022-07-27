@@ -46,7 +46,6 @@ const chunk = (arr, size) =>
 
 export const getGenresFromArtists = async (artistIds) => {
   // artists can only be called with maximum of 50
-  console.log(artistIds)
   const artistIdsList = chunk(artistIds, 50).map(e => e.filter(e => e && e.length).join(','))
 
   try {
