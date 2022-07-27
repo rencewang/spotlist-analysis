@@ -21,7 +21,7 @@ export default async (req, res) => {
             }
         })
         setCookie('token', response.data.refresh_token, { req, res, httpOnly: false, maxAge: 60 * 60 * 24 })
-        res.redirect(307, '/')
+        res.redirect('/')
     } catch (error) {
         console.log(error)
         res.redirect(500, '/')
