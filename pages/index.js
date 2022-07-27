@@ -123,7 +123,7 @@ const Home = () => {
                 styles={Styled.SelectOptions}
                 theme={(theme) => Styled.SelectTheme(theme)}
               />
-              <Link href="/api/logout"><Styled.Button>Sign out</Styled.Button></Link>
+              {/* <Link href="/api/logout"><Styled.Button>Sign out</Styled.Button></Link> */}
             </>
             : <Link href="/api/login"><Styled.Button>Sign in</Styled.Button></Link>
           }

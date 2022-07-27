@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { setCookie } from 'cookies-next'
+import { setCookies } from 'cookies-next'
 
 const { CLIENT_ID, CLIENT_SECRET, REDIRECT_URI } = process.env
 const AUTH_ENDPOINT = 'https://accounts.spotify.com/api/token'
@@ -20,8 +20,8 @@ export default async (req, res) => {
                 'Content-Type': 'application/x-www-form-urlencoded' 
             }
         })
-        setCookie('token', response.data.refresh_token, { req, res, httpOnly: false, maxAge: 60 * 60 * 24 })
-        res.redirect('/')
+        setCookies('token', response.data.refresh_token, { req, res, httpOnly: false, maxAge: 60 * 60 * 24 })
+        res.redirect(307, '/')
     } catch (error) {
         console.log(error)
         res.redirect(500, '/')
