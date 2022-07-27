@@ -10,6 +10,7 @@ import Analysis from '../utils/analysis'
 import * as Styled from '../styles/general'
 
 const Home = () => {
+  const [isPlaylistsLoading, setIsPlaylistsLoading] = useState(false)
   const [isTracksLoading, setIsTracksLoading] = useState(false)
   const [loggedIn, setLoggedIn] = useState(null)
   const [onTracklistPage, setOnTracklistPage] = useState(true)
@@ -38,8 +39,10 @@ const Home = () => {
   const [artists, setArtists] = useState([])
   
   const fillPlaylists = async () => {
+    setIsPlaylistsLoading(true)
     const playlists_response = await getPlaylists()
     setPlaylists(playlists_response)
+    setIsPlaylistsLoading(false)
   }
 
   // dropdown options for selecting playlist
@@ -121,9 +124,10 @@ const Home = () => {
                 onChange={setSelectedPlaylist} 
                 options={playlistOptions} 
                 styles={Styled.SelectOptions}
+                isLoading={isPlaylistsLoading}
                 theme={(theme) => Styled.SelectTheme(theme)}
               />
-              {/* <Link href="/api/logout"><Styled.Button>Sign out</Styled.Button></Link> */}
+              <Link href="/api/logout"><Styled.Button>Sign out</Styled.Button></Link>
             </>
             : <Link href="/api/login"><Styled.Button>Sign in</Styled.Button></Link>
           }
