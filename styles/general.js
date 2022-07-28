@@ -34,6 +34,10 @@ export const Container = styled.div`
         "nav"
         "bdy";
     overflow: hidden;
+
+    @media screen and (max-width: 700px) {
+        grid-template-rows: 80px auto;
+    }
 `
 
 export const Header = styled.header`
@@ -46,6 +50,13 @@ export const Header = styled.header`
     justify-content: space-between;
     align-items: center;
     background: rgba(255, 255, 255, 30%);
+
+    @media screen and (max-width: 700px) {
+        padding: 0 10px;
+        align-items: flex-start;
+        justify-content: space-around;
+        flex-direction: column !important;
+    }
 `
 
 export const Content = styled.div`
@@ -96,7 +107,7 @@ export const Justified = styled(Flex)`
 export const SelectOptions = {
     control: (provided) => ({
         ...provided,
-        width: 300,
+        width: 350,
     }),
     menu: (provided) => ({
         ...provided,

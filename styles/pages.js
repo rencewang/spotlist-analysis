@@ -1,7 +1,11 @@
 import styled from "styled-components"
 
 export const Page = styled.section`
-    margin: 0 30px;
+    margin: 10px 30px;
+
+    @media screen and (max-width: 700px) {
+        margin: 10px;
+    }
 `
 
 export const Table = styled.table`

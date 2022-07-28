@@ -112,25 +112,26 @@ const Home = () => {
         <Styled.Alert ref={downloaded}>Download started!</Styled.Alert>
 
         <Styled.Header>
+          {loggedIn &&
+            <Select 
+              defaultValue={selectedPlaylist} 
+              onChange={setSelectedPlaylist} 
+              options={playlistOptions} 
+              styles={Styled.SelectOptions}
+              isLoading={isPlaylistsLoading}
+              theme={(theme) => Styled.SelectTheme(theme)}
+            />
+          }
+
           <Styled.Flex>
             <Styled.Button onClick={() => setOnTracklistPage(true)}>Tracklist</Styled.Button>
             <Styled.Button onClick={() => setOnTracklistPage(false)}>Analysis</Styled.Button>
+            {loggedIn 
+              ? <Link href="/api/logout"><Styled.Button>Sign out</Styled.Button></Link>
+              : <Link href="/api/login"><Styled.Button>Sign in</Styled.Button></Link>
+            }
           </Styled.Flex>
 
-          {loggedIn 
-            ? <Styled.Flex>
-              <Select 
-                defaultValue={selectedPlaylist} 
-                onChange={setSelectedPlaylist} 
-                options={playlistOptions} 
-                styles={Styled.SelectOptions}
-                isLoading={isPlaylistsLoading}
-                theme={(theme) => Styled.SelectTheme(theme)}
-              />
-              <Link href="/api/logout"><Styled.Button style={{paddingLeft: "20px"}}>Sign out</Styled.Button></Link>
-            </Styled.Flex>
-            : <Link href="/api/login"><Styled.Button>Sign in</Styled.Button></Link>
-          }
         </Styled.Header>
 
         <Styled.Content>
