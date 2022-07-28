@@ -112,8 +112,8 @@ const Home = () => {
         <Styled.Alert ref={downloaded}>Download started!</Styled.Alert>
 
         <Styled.Header>
-          {loggedIn &&
-            <Select 
+          {loggedIn
+            ? <Select 
               defaultValue={selectedPlaylist} 
               onChange={setSelectedPlaylist} 
               options={playlistOptions} 
@@ -121,6 +121,7 @@ const Home = () => {
               isLoading={isPlaylistsLoading}
               theme={(theme) => Styled.SelectTheme(theme)}
             />
+            : <div></div>
           }
 
           <Styled.Flex>
