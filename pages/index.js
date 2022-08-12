@@ -139,9 +139,9 @@ const Home = () => {
               <Styled.Button onClick={() => setOnTracklistPage(true)}>
                 Tracklist
               </Styled.Button>
-              {/* <Styled.Button onClick={() => setOnTracklistPage(false)}>
+              <Styled.Button onClick={() => setOnTracklistPage(false)}>
                 Analysis
-              </Styled.Button> */}
+              </Styled.Button>
               {loggedIn ? (
                 <Link href="/api/logout">
                   <Styled.Button>Sign out</Styled.Button>

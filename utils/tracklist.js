@@ -72,7 +72,7 @@ const Tracklist = (props) => {
 
   return (
     <Styled.Page>
-      {/* <General.Button
+      <General.Button
         className="download"
         onClick={(e) => {
           DownloadCSV(e, TracksToCSV(tracks), name.label);
@@ -80,7 +80,7 @@ const Tracklist = (props) => {
         }}
       >
         Download tracklist as CSV
-      </General.Button> */}
+      </General.Button>
 
       <Styled.Table id="tracktable">
         <Styled.TracklistTableHead id="trackhead">
@@ -90,7 +90,6 @@ const Tracklist = (props) => {
             <th>Artist</th>
             <th>Album</th>
             <th>Added on</th>
-            <th>Link</th>
           </tr>
         </Styled.TracklistTableHead>
 
@@ -184,18 +183,6 @@ const Tracklist = (props) => {
                     {track.added_at.substring(5, 7)}/
                     {track.added_at.substring(8, 10)}/
                     {track.added_at.substring(0, 4)}
-                  </td>
-
-                  <td label="Link">
-                    <a
-                      className="spotify-link"
-                      href={
-                        track.track ? track.track.external_urls.spotify : null
-                      }
-                    >
-                      open on&nbsp;
-                      <img src="/spotify.png" alt="album cover" />
-                    </a>
                   </td>
                 </tr>
               ) || null
