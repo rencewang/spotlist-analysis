@@ -111,7 +111,7 @@ const Home = () => {
   return (
     <main>
       <Head>
-        <title>See Your Tracklists</title>
+        <title>Tracklists</title>
         <meta name="description" content="Get Playlist Analysis for Spotify" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
