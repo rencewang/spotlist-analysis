@@ -5,6 +5,7 @@ const GlobalStyle = createGlobalStyle`
     *:before,
     *:after {
         box-sizing: border-box;
+        color: ${({ theme }) => theme.textColor};
     }
 
     input:focus,
@@ -16,11 +17,12 @@ const GlobalStyle = createGlobalStyle`
 
     ::selection,
     ::-moz-selection {
-        background-color: rgb(212, 212, 212);
+        /* background-color: rgb(212, 212, 212); */
+        /* background-color: ${({ theme }) => theme.selectionColor}; */
     }
 
     ::placeholder {
-        color: gray;
+        color: ${({ theme }) => theme.subTextColor};;
     }
 
     body {
@@ -30,6 +32,7 @@ const GlobalStyle = createGlobalStyle`
         font-family: -apple-system, BlinkMacSystemFont, 'Arial', 'Roboto', sans-serif;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
+        background: ${({ theme }) => theme.backgroundColor};
     }
 
     h1,

@@ -130,6 +130,7 @@ const Home = () => {
                 styles={Styled.SelectOptions}
                 isLoading={isPlaylistsLoading}
                 theme={(theme) => Styled.SelectTheme(theme)}
+                className="playlist-select"
               />
             ) : (
               <div></div>

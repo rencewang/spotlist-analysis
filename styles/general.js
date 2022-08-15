@@ -6,6 +6,7 @@ export const Link = styled.a`
   transition: color 0.3s ease;
   &:hover {
     color: #000;
+    /* color: ${({ theme }) => theme.hoverColor}; */
   }
 `;
 
@@ -20,6 +21,7 @@ export const Button = styled.button`
   transition: color 0.3s ease;
   &:hover {
     color: #000;
+    /* color: ${({ theme }) => theme.hoverColor}; */
   }
 `;
 
@@ -49,7 +51,6 @@ export const Header = styled.header`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: rgba(255, 255, 255, 30%);
 
   @media screen and (max-width: 700px) {
     padding: 0 10px;
@@ -87,9 +88,10 @@ export const Alert = styled.div`
   bottom: 30px;
   left: 30px;
   padding: 10px 30px;
-  background-color: rgba(255, 255, 255, 100%);
+  background-color: ${({ theme }) => theme.backgroundColor};
+
   border-radius: 10px;
-  border: 2px solid black;
+  border: 2px solid;
   font-weight: bold;
   transition: all 1s ease;
 `;
@@ -130,6 +132,6 @@ export const SelectTheme = (theme) => ({
     neutral0: 'white',
     primary25: '#C0C0C0',
     primary50: '#C0C0C0',
-    primary: 'black',
+    primary: `rgba(0, 0, 0, 10%)`,
   },
 });
