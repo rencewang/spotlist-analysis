@@ -5,8 +5,8 @@ export const Link = styled.a`
   text-decoration: none;
   transition: color 0.3s ease;
   &:hover {
-    color: #000;
     /* color: ${({ theme }) => theme.hoverColor}; */
+    color: gray;
   }
 `;
 
@@ -19,10 +19,6 @@ export const Button = styled.button`
   border: none;
   background-color: transparent;
   transition: color 0.3s ease;
-  &:hover {
-    color: #000;
-    /* color: ${({ theme }) => theme.hoverColor}; */
-  }
 `;
 
 export const Container = styled.div`
@@ -38,7 +34,7 @@ export const Container = styled.div`
   overflow: hidden;
 
   @media screen and (max-width: 700px) {
-    grid-template-rows: 80px auto;
+    grid-template-rows: 100px auto;
   }
 `;
 
@@ -57,6 +53,7 @@ export const Header = styled.header`
     align-items: flex-start;
     justify-content: space-around;
     flex-direction: column !important;
+    border-bottom: 2px solid;
   }
 `;
 
@@ -88,7 +85,8 @@ export const Alert = styled.div`
   bottom: 30px;
   left: 30px;
   padding: 10px 30px;
-  background-color: ${({ theme }) => theme.backgroundColor};
+  background-color: white;
+  /* background-color: ${({ theme }) => theme.backgroundColor}; */
 
   border-radius: 10px;
   border: 2px solid;
@@ -132,6 +130,6 @@ export const SelectTheme = (theme) => ({
     neutral0: 'white',
     primary25: '#C0C0C0',
     primary50: '#C0C0C0',
-    primary: `rgba(0, 0, 0, 10%)`,
+    primary: `#595959`,
   },
 });

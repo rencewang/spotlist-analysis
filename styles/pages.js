@@ -28,7 +28,8 @@ export const TableHead = styled.thead`
   position: -webkit-sticky; /* Safari */
   position: sticky;
   top: 0;
-  background-color: ${({ theme }) => theme.backgroundColor};
+  /* background-color: ${({ theme }) => theme.backgroundColor}; */
+  background-color: white;
 
   th {
     text-align: left;
@@ -44,7 +45,8 @@ export const TableBody = styled.tbody`
       position: relative;
     }
     &:nth-child(even) {
-      background-color: rgba(255, 255, 255, 20%);
+      /* background-color: rgba(255, 255, 255, 20%); */
+      background-color: rgba(0, 0, 0, 2%);
     }
   }
 `;
