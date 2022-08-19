@@ -19,6 +19,10 @@ export const Button = styled.button`
   border: none;
   background-color: transparent;
   transition: color 0.3s ease;
+  &:hover {
+    /* color: ${({ theme }) => theme.hoverColor}; */
+    color: gray;
+  }
 `;
 
 export const Container = styled.div`
