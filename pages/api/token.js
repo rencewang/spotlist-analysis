@@ -7,6 +7,10 @@ const AUTH = Buffer.from(`${CLIENT_ID}:${CLIENT_SECRET}`, 'utf-8').toString('bas
 
 export default async (req, res) => {
     const refresh_token = getCookies({ req, res }).token
+    if (!refresh_token) {
+        return res.status(401).send("No refresh token");
+    }
+
     const DATA = new URLSearchParams({
         grant_type: 'refresh_token',
         refresh_token: refresh_token, 
@@ -21,7 +25,7 @@ export default async (req, res) => {
         })
         res.send(response.data.access_token)
     } catch (error) {
-        // console.log(error)
-        res.send({ error: error })
+        console.error("Token Error", error.response ? error.response.data : error.message);
+        res.status(500).send("Failed to retrieve token");
     }
 }

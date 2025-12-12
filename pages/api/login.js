@@ -1,4 +1,5 @@
 const { CLIENT_ID, REDIRECT_URI } = process.env;
+
 const SCOPES = ['playlist-read-private user-library-read'];
 const AUTH_PARAM = new URLSearchParams({
   client_id: CLIENT_ID,

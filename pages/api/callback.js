@@ -2,6 +2,7 @@ import axios from 'axios'
 import { setCookie } from 'cookies-next'
 
 const { CLIENT_ID, CLIENT_SECRET, REDIRECT_URI } = process.env
+
 const AUTH_ENDPOINT = 'https://accounts.spotify.com/api/token'
 const AUTH = Buffer.from(`${CLIENT_ID}:${CLIENT_SECRET}`, 'utf-8').toString('base64')
 
