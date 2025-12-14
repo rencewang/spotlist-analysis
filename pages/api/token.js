@@ -1,4 +1,3 @@
-import axios from "axios"
 import { getCookies } from 'cookies-next'
 
 const { CLIENT_ID, CLIENT_SECRET } = process.env
@@ -17,15 +16,18 @@ export default async (req, res) => {
     })
 
     try {
-        const response = await axios.post(TOKEN_ENDPOINT, DATA, {
+        const response = await fetch(TOKEN_ENDPOINT, {
+            method: 'POST',
             headers: {
                 Authorization: `Basic ${AUTH}`,
                 'Content-Type': 'application/x-www-form-urlencoded',
-            }
+            },
+            body: DATA
         })
-        res.send(response.data.access_token)
+        const data = await response.json()
+        res.send(data.access_token)
     } catch (error) {
-        console.error("Token Error", error.response ? error.response.data : error.message);
+        console.error("Token Error", error.message);
         res.status(500).send("Failed to retrieve token");
     }
 }

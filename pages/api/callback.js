@@ -1,4 +1,3 @@
-import axios from 'axios'
 import { setCookie } from 'cookies-next'
 
 const { CLIENT_ID, CLIENT_SECRET, REDIRECT_URI } = process.env
@@ -15,13 +14,16 @@ export default async (req, res) => {
     })
 
     try {
-        const response = await axios.post(AUTH_ENDPOINT, DATA, {
+        const response = await fetch(AUTH_ENDPOINT, {
+            method: 'POST',
             headers: {
                 'Authorization': `Basic ${AUTH}`,
                 'Content-Type': 'application/x-www-form-urlencoded' 
-            }
+            },
+            body: DATA
         })
-        setCookie('token', response.data.refresh_token, { req, res, httpOnly: false, maxAge: 60 * 60 * 24 })
+        const data = await response.json()
+        setCookie('token', data.refresh_token, { req, res, httpOnly: false, maxAge: 60 * 60 * 24 })
         res.redirect(307, '/')
     } catch (error) {
         console.log(error)
