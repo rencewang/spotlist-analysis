@@ -10,7 +10,7 @@ export const Wrapper = styled.div`
 export const Nav = styled.nav`
   position: fixed;
   left: 0; top: 0; bottom: 0;
-  width: 60px;
+  width: 50px;
   background: #000;
   display: flex;
   flex-direction: column;
@@ -24,7 +24,7 @@ export const Nav = styled.nav`
     text-orientation: mixed;
     text-decoration: none;
     font-weight: 700;
-    font-size: 0.8rem;
+    font-size: 0.7rem;
     margin-bottom: 2rem;
     transform: rotate(180deg);
     opacity: 0.5;
@@ -35,27 +35,24 @@ export const Nav = styled.nav`
 `;
 
 export const Container = styled.div`
-  margin-left: 60px;
-  padding: 2rem;
+  margin-left: 50px;
+  padding: 1rem;
   min-height: 100vh;
   display: grid;
-  grid-template-columns: 250px 1fr 300px;
+  grid-template-columns: 320px 1fr;
   gap: 1rem;
   
-  @media (max-width: 1000px) {
+  @media (max-width: 900px) {
     grid-template-columns: 1fr;
-    grid-template-rows: auto auto auto;
   }
 `;
 
 export const Panel = styled.div`
   background: #fff;
   border: 1px solid #000;
-  padding: 1rem;
+  padding: 1.5rem;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
-  height: 100%;
   
   h2 {
     font-size: 0.7rem;
@@ -65,22 +62,24 @@ export const Panel = styled.div`
     border-bottom: 1px solid #000;
     padding-bottom: 0.5rem;
     letter-spacing: 0.5px;
+    display: flex;
+    justify-content: space-between;
   }
 `;
 
-export const MainPanel = styled(Panel)`
-    grid-column: 2;
-    overflow-y: auto;
-    max-height: calc(100vh - 4rem);
-    
-    @media(max-width: 1000px) { grid-column: 1; max-height: none; }
+export const SidePanel = styled(Panel)`
+    /* The narrow column (Left) */
+    @media (min-width: 901px) {
+        position: sticky;
+        top: 1rem;
+        height: calc(100vh - 2rem);
+        overflow-y: auto;
+    }
 `;
 
-export const SidePanel = styled(Panel)`
-    max-height: calc(100vh - 4rem);
-    overflow-y: auto;
-    
-    @media(max-width: 1000px) { max-height: none; }
+export const MainPanel = styled(Panel)`
+    /* The wide column (Right) */
+    min-height: calc(100vh - 2rem);
 `;
 
 export const Header = styled.div`
@@ -89,26 +88,26 @@ export const Header = styled.div`
     padding-bottom: 1rem;
     
     h1 { 
-        font-size: 2rem; 
+        font-size: 1.8rem; 
         margin: 0; 
         letter-spacing: -1px; 
     }
     
-    div.meta { 
-        font-family: 'Menlo', monospace; 
-        font-size: 0.7rem; 
-        margin-top: 0.5rem; 
-        opacity: 0.6;
-    }
-    
     select {
-        margin-top: 1rem;
+        margin-top: 0.5rem;
         padding: 0.5rem;
         font-family: 'Menlo', monospace;
         border: 1px solid #000;
         background: #fff;
         width: 100%;
         font-size: 0.8rem;
+    }
+    
+    div.meta {
+        font-family: 'Menlo', monospace;
+        font-size: 0.7rem; 
+        margin-top: 0.5rem; 
+        opacity: 0.6;
     }
 `;
 
@@ -124,12 +123,14 @@ export const StatRow = styled.div`
     span.val { font-family: 'Menlo', monospace; }
 `;
 
-export const AiNote = styled.div`
-    margin-top: auto;
-    background: #000;
-    color: #fff;
-    padding: 1rem;
-    font-size: 0.8rem;
+export const Toggle = styled.button`
+    background: none;
+    border: 1px solid #000;
     font-family: 'Menlo', monospace;
-    line-height: 1.4;
+    font-size: 0.6rem;
+    cursor: pointer;
+    padding: 2px 6px;
+    
+    &:hover { background: #000; color: #fff; }
+    &.active { background: #000; color: #fff; }
 `;

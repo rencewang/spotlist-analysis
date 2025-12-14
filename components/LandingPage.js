@@ -152,27 +152,14 @@ const LandingPage = () => {
     return (
         <Wrapper>
             <Nav>
-                <Logo>KNOW YOUR PLAYLIST</Logo>
-                <div>V2.0 // SWISS_DENSE</div>
+                <Logo>PLAYLIST SIGNALS</Logo>
+                <div>LOG IN</div>
             </Nav>
-            
-            <Marquee>
-                <div className="track">
-                    <span>HIPSTER_INDEX: 84%</span>
-                    <span>VIBE: MELANCHOLY</span>
-                    <span>TOP_GENRE: DREAM POP</span>
-                    <span>EXP_PCT: 12%</span>
-                    <span>AVG_BPM: N/A</span>
-                    <span>HIPSTER_INDEX: 84%</span>
-                    <span>VIBE: MELANCHOLY</span>
-                    <span>TOP_GENRE: DREAM POP</span>
-                    <span>EXP_PCT: 12%</span>
-                </div>
-            </Marquee>
 
             <Main>
                 <HeroTitle>OBJECTIVE<br/>ANALYSIS</HeroTitle>
                 <Subtitle>
+                    {/* Delete and edit effect, verify your daily listens, Analyze your daily */}
                     Stop guessing. Get raw, unfiltered insights into your Spotify playlists.
                 </Subtitle>
                 
@@ -180,8 +167,11 @@ const LandingPage = () => {
                     <CtaButton>Log in with Spotify</CtaButton>
                 </Link>
             </Main>
+
+{/* More about what is different about this service */}
+            {/* Something on metadata, privacy policy, terms of service, etc. */}
             
-            <Grid>
+            {/* <Grid>
                 <FeatureBox>
                     <h3>01. Metadata Munging</h3>
                     <p>We crunch release dates, popularity scores, and artist diversity to give you a "Hipster Index" and "Diversity Score".</p>
@@ -194,7 +184,7 @@ const LandingPage = () => {
                     <h3>03. The Roast</h3>
                     <p>Our AI judges your taste based on cold, hard data. It might hurt, but it's true.</p>
                 </FeatureBox>
-            </Grid>
+            </Grid> */}
         </Wrapper>
     );
 };
