@@ -4,25 +4,6 @@ import { useRouter } from "next/router";
 import { getCookies } from "cookies-next";
 import Link from "next/link";
 import useSWR from "swr";
-
-import { getPlaylists, getTracks, getArtistDetails } from "../lib/spotify";
-import { processPlaylistData, calculateAnalysis } from "../lib/analysis";
-
-import {
-  Wrapper,
-  Nav,
-  Container,
-  MainPanel,
-  SidePanel,
-  Header,
-  StatRow,
-  Toggle,
-} from "../components/Dashboard/Layout";
-import {
-  DenseTable,
-  GenreCloud,
-  GenreTag,
-} from "../components/Dashboard/Visualizations";
 import {
   BarChart,
   Bar,
@@ -34,12 +15,16 @@ import {
   YAxis,
 } from "recharts";
 
+import { getPlaylists, getTracks, getArtistDetails } from "../lib/spotify";
+import { processPlaylistData, calculateAnalysis } from "../lib/analysis";
+import { chartStyles } from "../styles/recharts";
+import styles from "../styles/Dashboard.module.css";
+
 const Dashboard = () => {
   const router = useRouter();
   const [selectedPlaylistUrl, setSelectedPlaylistUrl] = useState(null);
   const [timeMode, setTimeMode] = useState("DECADE");
 
-  // Check auth and redirect if no token
   const token = getCookies("token").token;
   useEffect(() => {
     if (!token) {
@@ -47,55 +32,28 @@ const Dashboard = () => {
     }
   }, [token, router]);
 
-  /**
-   * SWR: Fetch playlists with caching
-   * Key: 'playlists' - simple string key for the playlists endpoint
-   * Fetcher: getPlaylists - calls Spotify API
-   * Cache: Reuses data when revisiting dashboard
-   */
   const { data: playlists } = useSWR(token ? "playlists" : null, getPlaylists);
 
-  /**
-   * Auto-select first playlist when playlists load
-   * Only runs once when playlists data becomes available
-   */
   useEffect(() => {
     if (playlists?.length > 0 && !selectedPlaylistUrl) {
       setSelectedPlaylistUrl(playlists[0].tracks.href);
     }
   }, [playlists, selectedPlaylistUrl]);
 
-  // Find selected playlist info from playlists array
   const selectedPlaylistInfo = playlists?.find(
     (p) => p.tracks.href === selectedPlaylistUrl
   );
 
-  /**
-   * SWR: Fetch tracks for selected playlist with caching
-   * Key: ['tracks', url] - array key includes URL for unique cache per playlist
-   * Fetcher: Receives all key elements as args, we use second arg (url)
-   * Cache: Switching between playlists reuses cached track data
-   */
   const { data: tracksData, isLoading: tracksLoading } = useSWR(
     selectedPlaylistUrl ? ["tracks", selectedPlaylistUrl] : null,
     ([, url]) => getTracks(url)
   );
 
-  /**
-   * Process track data in memory (not cached by SWR)
-   * Runs whenever tracksData changes
-   */
   const processedData = useMemo(() => {
     if (!tracksData) return null;
     return processPlaylistData(tracksData);
   }, [tracksData]);
 
-  /**
-   * SWR: Fetch artist details and genres with caching
-   * Key: ['artists', ids] - array key includes artist IDs for unique cache
-   * Fetcher: Receives all key elements as args, we use second arg (ids)
-   * Cache: Same artist combinations reuse cached genre data
-   */
   const artistIds = processedData?.uniqueArtistIds;
   const { data: artistData } = useSWR(
     artistIds?.length > 0 ? ["artists", artistIds] : null,
@@ -104,19 +62,13 @@ const Dashboard = () => {
 
   const genresStats = artistData?.genreStats || [];
 
-  /**
-   * Calculate final analysis from processed data
-   * Runs whenever processedData changes
-   */
   const analysis = useMemo(() => {
     if (!processedData) return null;
     return calculateAnalysis(processedData);
   }, [processedData]);
 
-  // Use SWR's loading state
   const isLoading = tracksLoading;
 
-  // Chart Logic: Time Distribution
   const timeChartData = useMemo(() => {
     if (!analysis) return [];
     const source =
@@ -135,17 +87,14 @@ const Dashboard = () => {
     }));
   }, [analysis, timeMode]);
 
-  // Extract chart data from processed data
   const scatterData = processedData?.chartData?.scatter || [];
   const artistsStats = processedData?.artistStats || [];
   const albumStats = processedData?.albumStats || [];
   const tracks = processedData?.tracks || [];
 
-  // Expandable list state
   const [showAllArtists, setShowAllArtists] = useState(false);
   const [showAllAlbums, setShowAllAlbums] = useState(false);
 
-  // Genre bar chart data (top 10)
   const genreBarData = useMemo(() => {
     return genresStats.slice(0, 10).map((g) => ({
       name: g.name,
@@ -154,13 +103,13 @@ const Dashboard = () => {
   }, [genresStats]);
 
   return (
-    <Wrapper>
+    <div className={styles.wrapper}>
       <Head>
         <title>Dashboard // Know Your Playlist</title>
       </Head>
-      <Nav>
+      <nav className={styles.nav}>
         <Link href="/">HOME</Link>
-        <span className="active">DASHBOARD</span>
+        <span className={styles.active}>DASHBOARD</span>
         <Link href="/api/logout">
           <span
             style={{
@@ -173,12 +122,11 @@ const Dashboard = () => {
             LOG OUT
           </span>
         </Link>
-      </Nav>
+      </nav>
 
-      <Container>
-        {/* 1. LEFT PANEL (NARROW) */}
-        <SidePanel>
-          <Header>
+      <div className={styles.container}>
+        <div className={styles.sidePanel}>
+          <div className={styles.header}>
             <select
               onChange={(e) => setSelectedPlaylistUrl(e.target.value)}
               value={selectedPlaylistUrl || ""}
@@ -192,89 +140,75 @@ const Dashboard = () => {
                 </option>
               ))}
             </select>
-          </Header>
+          </div>
 
           {analysis ? (
             <>
-              <StatRow>
-                <span className="label">Tracks</span>
-                <span className="val">{analysis.trackCount}</span>
-              </StatRow>
-              <StatRow>
-                <span className="label">Duration</span>
-                <span className="val">{analysis.totalDurationFormatted}</span>
-              </StatRow>
-              <StatRow>
-                <span className="label">Average Duration</span>
-                <span className="val">{analysis.avgDurationFormatted}</span>
-              </StatRow>
-              <StatRow>
-                <span className="label">Average Popularity</span>
-                <span className="val">{analysis.avgPopularity}</span>
-              </StatRow>
-              <StatRow>
-                <span className="label">Explicitness</span>
-                <span className="val">{analysis.explicitPct}</span>
-              </StatRow>
-              <StatRow>
-                <span className="label">Year Span</span>
-                <span className="val">{analysis.yearRange} yr</span>
-              </StatRow>
+              <div className={styles.statRow}>
+                <span className={styles.label}>Tracks</span>
+                <span className={styles.val}>{analysis.trackCount}</span>
+              </div>
+              <div className={styles.statRow}>
+                <span className={styles.label}>Duration</span>
+                <span className={styles.val}>{analysis.totalDurationFormatted}</span>
+              </div>
+              <div className={styles.statRow}>
+                <span className={styles.label}>Average Duration</span>
+                <span className={styles.val}>{analysis.avgDurationFormatted}</span>
+              </div>
+              <div className={styles.statRow}>
+                <span className={styles.label}>Average Popularity</span>
+                <span className={styles.val}>{analysis.avgPopularity}</span>
+              </div>
+              <div className={styles.statRow}>
+                <span className={styles.label}>Explicitness</span>
+                <span className={styles.val}>{analysis.explicitPct}</span>
+              </div>
+              <div className={styles.statRow}>
+                <span className={styles.label}>Year Span</span>
+                <span className={styles.val}>{analysis.yearRange} yr</span>
+              </div>
 
               <div style={{ height: "2rem" }} />
 
               <h2>
                 Timeline
                 <div>
-                  <Toggle
-                    className={timeMode === "DECADE" ? "active" : ""}
+                  <button
+                    className={`${styles.toggle} ${timeMode === "DECADE" ? styles.active : ""}`}
                     onClick={() => setTimeMode("DECADE")}
                   >
                     DEC
-                  </Toggle>
-                  <Toggle
-                    className={timeMode === "YEAR" ? "active" : ""}
+                  </button>
+                  <button
+                    className={`${styles.toggle} ${timeMode === "YEAR" ? styles.active : ""}`}
                     onClick={() => setTimeMode("YEAR")}
                   >
                     YR
-                  </Toggle>
+                  </button>
                 </div>
               </h2>
               <ResponsiveContainer width="100%" height={120}>
                 <BarChart data={timeChartData}>
-                  <XAxis
-                    dataKey="label"
-                    tick={{ fontSize: 10, fontFamily: "Menlo, monospace" }}
-                    stroke="#000"
-                  />
+                  <XAxis dataKey="label" tick={chartStyles.axis.tick} stroke={chartStyles.axis.stroke} />
                   <Tooltip
                     content={({ payload }) => {
                       if (!payload?.[0]) return null;
                       const data = payload[0].payload;
                       return (
-                        <div
-                          style={{
-                            background: "#000",
-                            color: "#fff",
-                            padding: "4px 8px",
-                            fontSize: "0.7rem",
-                            fontFamily: "Menlo, monospace",
-                            border: "2px solid #000",
-                          }}
-                        >
-                          {data.label}: {data.value} tracks
-                          <br />
+                        <div style={chartStyles.tooltip}>
+                          {data.label}: {data.value} tracks<br />
                           Avg Pop: {data.avgPopularity}
                         </div>
                       );
                     }}
                   />
-                  <Bar dataKey="value" fill="#000" isAnimationActive={false} />
+                  <Bar dataKey="value" {...chartStyles.bar} />
                 </BarChart>
               </ResponsiveContainer>
 
               <h2>Top Artists</h2>
-              <DenseTable>
+              <table className={styles.denseTable}>
                 <tbody>
                   {artistsStats
                     .slice(0, showAllArtists ? 10 : 5)
@@ -286,7 +220,7 @@ const Dashboard = () => {
                       </tr>
                     ))}
                 </tbody>
-              </DenseTable>
+              </table>
               {artistsStats.length > 5 && (
                 <div
                   style={{
@@ -304,7 +238,7 @@ const Dashboard = () => {
               <div style={{ height: "1rem" }} />
 
               <h2>Top Albums</h2>
-              <DenseTable>
+              <table className={styles.denseTable}>
                 <tbody>
                   {albumStats.slice(0, showAllAlbums ? 10 : 5).map((a, i) => (
                     <tr key={i}>
@@ -314,7 +248,7 @@ const Dashboard = () => {
                     </tr>
                   ))}
                 </tbody>
-              </DenseTable>
+              </table>
               {albumStats.length > 5 && (
                 <div
                   style={{
@@ -336,8 +270,8 @@ const Dashboard = () => {
                   <YAxis
                     type="category"
                     dataKey="name"
-                    tick={{ fontSize: 9, fontFamily: "Menlo, monospace" }}
-                    stroke="#000"
+                    tick={{ fontSize: 9, fontFamily: chartStyles.fontFamily }}
+                    stroke={chartStyles.stroke}
                     width={80}
                   />
                   <Tooltip
@@ -345,43 +279,33 @@ const Dashboard = () => {
                       if (!payload?.[0]) return null;
                       const data = payload[0].payload;
                       return (
-                        <div
-                          style={{
-                            background: "#000",
-                            color: "#fff",
-                            padding: "4px 8px",
-                            fontSize: "0.7rem",
-                            fontFamily: "Menlo, monospace",
-                            border: "2px solid #000",
-                          }}
-                        >
+                        <div style={chartStyles.tooltip}>
                           {data.name}: {data.count}
                         </div>
                       );
                     }}
                   />
-                  <Bar dataKey="count" fill="#000" isAnimationActive={false} />
+                  <Bar dataKey="count" {...chartStyles.bar} />
                 </BarChart>
               </ResponsiveContainer>
 
               <div style={{ height: "1rem" }} />
 
               <h2>Genre Cloud</h2>
-              <GenreCloud>
+              <div className={styles.genreCloud}>
                 {genresStats.slice(0, 20).map((g, i) => (
-                  <GenreTag key={g.name} className={i < 3 ? "high" : "low"}>
+                  <span key={g.name} className={`${styles.genreTag} ${i < 3 ? styles.high : ""}`}>
                     {g.name} ({g.count})
-                  </GenreTag>
+                  </span>
                 ))}
-              </GenreCloud>
+              </div>
             </>
           ) : (
             <div style={{ padding: "1rem" }}>Select a playlist...</div>
           )}
-        </SidePanel>
+        </div>
 
-        {/* 2. MAIN PANEL (WIDE) */}
-        <MainPanel>
+        <div className={styles.mainPanel}>
           {isLoading ? (
             <div
               style={{
@@ -396,33 +320,31 @@ const Dashboard = () => {
             <>
               <h2>Popularity vs Duration (Min)</h2>
               <ResponsiveContainer width="100%" height={300}>
-                <ScatterChart
-                  margin={{ top: 20, right: 20, bottom: 20, left: 20 }}
-                >
+                <ScatterChart margin={chartStyles.margin}>
                   <XAxis
                     type="number"
                     dataKey="x"
                     name="Duration"
                     unit="m"
-                    tick={{ fontSize: 10, fontFamily: "Menlo, monospace" }}
-                    stroke="#000"
+                    tick={chartStyles.axis.tick}
+                    stroke={chartStyles.axis.stroke}
                     label={{
                       value: "Duration (min)",
                       position: "bottom",
-                      style: { fontSize: 10, fontFamily: "Menlo, monospace" },
+                      style: { fontSize: chartStyles.fontSize, fontFamily: chartStyles.fontFamily },
                     }}
                   />
                   <YAxis
                     type="number"
                     dataKey="y"
                     name="Popularity"
-                    tick={{ fontSize: 10, fontFamily: "Menlo, monospace" }}
-                    stroke="#000"
+                    tick={chartStyles.axis.tick}
+                    stroke={chartStyles.axis.stroke}
                     label={{
                       value: "Popularity",
                       angle: -90,
                       position: "left",
-                      style: { fontSize: 10, fontFamily: "Menlo, monospace" },
+                      style: { fontSize: chartStyles.fontSize, fontFamily: chartStyles.fontFamily },
                     }}
                   />
                   <Tooltip
@@ -430,33 +352,19 @@ const Dashboard = () => {
                       if (!payload?.[0]) return null;
                       const data = payload[0].payload;
                       return (
-                        <div
-                          style={{
-                            background: "#000",
-                            color: "#fff",
-                            padding: "4px 8px",
-                            fontSize: "0.7rem",
-                            fontFamily: "Menlo, monospace",
-                            border: "2px solid #000",
-                          }}
-                        >
-                          {data.title}
-                          <br />
+                        <div style={chartStyles.tooltip}>
+                          {data.title}<br />
                           Pop: {data.y} | Dur: {data.x.toFixed(2)}m
                         </div>
                       );
                     }}
                   />
-                  <Scatter
-                    data={scatterData}
-                    fill="#000"
-                    isAnimationActive={false}
-                  />
+                  <Scatter data={scatterData} {...chartStyles.scatter} />
                 </ScatterChart>
               </ResponsiveContainer>
 
               <h2>Tracklist Log</h2>
-              <DenseTable>
+              <table className={styles.denseTable}>
                 <thead>
                   <tr>
                     <th style={{ width: "30px" }}>#</th>
@@ -495,16 +403,16 @@ const Dashboard = () => {
                     </tr>
                   ))}
                 </tbody>
-              </DenseTable>
+              </table>
             </>
           ) : (
             <div style={{ padding: "2rem" }}>
               Select a playlist to begin analysis.
             </div>
           )}
-        </MainPanel>
-      </Container>
-    </Wrapper>
+        </div>
+      </div>
+    </div>
   );
 };
 
