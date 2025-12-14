@@ -6,10 +6,7 @@ import Link from "next/link";
 import useSWR from "swr";
 
 import { getPlaylists, getTracks, getArtistDetails } from "../lib/spotify";
-import {
-  processPlaylistData,
-  calculateAnalysis,
-} from "../lib/analysis";
+import { processPlaylistData, calculateAnalysis } from "../lib/analysis";
 
 import {
   Wrapper,
@@ -56,10 +53,7 @@ const Dashboard = () => {
    * Fetcher: getPlaylists - calls Spotify API
    * Cache: Reuses data when revisiting dashboard
    */
-  const { data: playlists } = useSWR(
-    token ? 'playlists' : null,
-    getPlaylists
-  );
+  const { data: playlists } = useSWR(token ? "playlists" : null, getPlaylists);
 
   /**
    * Auto-select first playlist when playlists load
@@ -73,7 +67,7 @@ const Dashboard = () => {
 
   // Find selected playlist info from playlists array
   const selectedPlaylistInfo = playlists?.find(
-    p => p.tracks.href === selectedPlaylistUrl
+    (p) => p.tracks.href === selectedPlaylistUrl
   );
 
   /**
@@ -83,7 +77,7 @@ const Dashboard = () => {
    * Cache: Switching between playlists reuses cached track data
    */
   const { data: tracksData, isLoading: tracksLoading } = useSWR(
-    selectedPlaylistUrl ? ['tracks', selectedPlaylistUrl] : null,
+    selectedPlaylistUrl ? ["tracks", selectedPlaylistUrl] : null,
     ([, url]) => getTracks(url)
   );
 
@@ -104,7 +98,7 @@ const Dashboard = () => {
    */
   const artistIds = processedData?.uniqueArtistIds;
   const { data: artistData } = useSWR(
-    artistIds?.length > 0 ? ['artists', artistIds] : null,
+    artistIds?.length > 0 ? ["artists", artistIds] : null,
     ([, ids]) => getArtistDetails(ids)
   );
 
@@ -153,7 +147,7 @@ const Dashboard = () => {
 
   // Genre bar chart data (top 10)
   const genreBarData = useMemo(() => {
-    return genresStats.slice(0, 10).map(g => ({
+    return genresStats.slice(0, 10).map((g) => ({
       name: g.name,
       count: g.count,
     }));
@@ -165,9 +159,7 @@ const Dashboard = () => {
         <title>Dashboard // Know Your Playlist</title>
       </Head>
       <Nav>
-        <Link href="/">
-          <a>HOME</a>
-        </Link>
+        <Link href="/">HOME</Link>
         <span className="active">DASHBOARD</span>
         <Link href="/api/logout">
           <span
@@ -250,9 +242,9 @@ const Dashboard = () => {
               </h2>
               <ResponsiveContainer width="100%" height={120}>
                 <BarChart data={timeChartData}>
-                  <XAxis 
-                    dataKey="label" 
-                    tick={{ fontSize: 10, fontFamily: 'Menlo, monospace' }}
+                  <XAxis
+                    dataKey="label"
+                    tick={{ fontSize: 10, fontFamily: "Menlo, monospace" }}
                     stroke="#000"
                   />
                   <Tooltip
@@ -262,15 +254,16 @@ const Dashboard = () => {
                       return (
                         <div
                           style={{
-                            background: '#000',
-                            color: '#fff',
-                            padding: '4px 8px',
-                            fontSize: '0.7rem',
-                            fontFamily: 'Menlo, monospace',
-                            border: '2px solid #000',
+                            background: "#000",
+                            color: "#fff",
+                            padding: "4px 8px",
+                            fontSize: "0.7rem",
+                            fontFamily: "Menlo, monospace",
+                            border: "2px solid #000",
                           }}
                         >
-                          {data.label}: {data.value} tracks<br />
+                          {data.label}: {data.value} tracks
+                          <br />
                           Avg Pop: {data.avgPopularity}
                         </div>
                       );
@@ -283,18 +276,28 @@ const Dashboard = () => {
               <h2>Top Artists</h2>
               <DenseTable>
                 <tbody>
-                  {artistsStats.slice(0, showAllArtists ? 10 : 5).map((a, i) => (
-                    <tr key={i}>
-                      <td style={{ width: "20px" }}>{i + 1}</td>
-                      <td>{a.name}</td>
-                      <td style={{ textAlign: "right" }}>{a.count}</td>
-                    </tr>
-                  ))}
+                  {artistsStats
+                    .slice(0, showAllArtists ? 10 : 5)
+                    .map((a, i) => (
+                      <tr key={i}>
+                        <td style={{ width: "20px" }}>{i + 1}</td>
+                        <td>{a.name}</td>
+                        <td style={{ textAlign: "right" }}>{a.count}</td>
+                      </tr>
+                    ))}
                 </tbody>
               </DenseTable>
               {artistsStats.length > 5 && (
-                <div style={{ marginTop: '0.5rem', fontSize: '0.7rem', cursor: 'pointer', opacity: 0.7 }} onClick={() => setShowAllArtists(!showAllArtists)}>
-                  {showAllArtists ? '▲ Show Less' : '▼ Show More'}
+                <div
+                  style={{
+                    marginTop: "0.5rem",
+                    fontSize: "0.7rem",
+                    cursor: "pointer",
+                    opacity: 0.7,
+                  }}
+                  onClick={() => setShowAllArtists(!showAllArtists)}
+                >
+                  {showAllArtists ? "▲ Show Less" : "▼ Show More"}
                 </div>
               )}
 
@@ -313,8 +316,16 @@ const Dashboard = () => {
                 </tbody>
               </DenseTable>
               {albumStats.length > 5 && (
-                <div style={{ marginTop: '0.5rem', fontSize: '0.7rem', cursor: 'pointer', opacity: 0.7 }} onClick={() => setShowAllAlbums(!showAllAlbums)}>
-                  {showAllAlbums ? '▲ Show Less' : '▼ Show More'}
+                <div
+                  style={{
+                    marginTop: "0.5rem",
+                    fontSize: "0.7rem",
+                    cursor: "pointer",
+                    opacity: 0.7,
+                  }}
+                  onClick={() => setShowAllAlbums(!showAllAlbums)}
+                >
+                  {showAllAlbums ? "▲ Show Less" : "▼ Show More"}
                 </div>
               )}
 
@@ -322,10 +333,10 @@ const Dashboard = () => {
               <ResponsiveContainer width="100%" height={150}>
                 <BarChart data={genreBarData} layout="vertical">
                   <XAxis type="number" hide />
-                  <YAxis 
-                    type="category" 
-                    dataKey="name" 
-                    tick={{ fontSize: 9, fontFamily: 'Menlo, monospace' }}
+                  <YAxis
+                    type="category"
+                    dataKey="name"
+                    tick={{ fontSize: 9, fontFamily: "Menlo, monospace" }}
                     stroke="#000"
                     width={80}
                   />
@@ -336,12 +347,12 @@ const Dashboard = () => {
                       return (
                         <div
                           style={{
-                            background: '#000',
-                            color: '#fff',
-                            padding: '4px 8px',
-                            fontSize: '0.7rem',
-                            fontFamily: 'Menlo, monospace',
-                            border: '2px solid #000',
+                            background: "#000",
+                            color: "#fff",
+                            padding: "4px 8px",
+                            fontSize: "0.7rem",
+                            fontFamily: "Menlo, monospace",
+                            border: "2px solid #000",
                           }}
                         >
                           {data.name}: {data.count}
@@ -393,25 +404,25 @@ const Dashboard = () => {
                     dataKey="x"
                     name="Duration"
                     unit="m"
-                    tick={{ fontSize: 10, fontFamily: 'Menlo, monospace' }}
+                    tick={{ fontSize: 10, fontFamily: "Menlo, monospace" }}
                     stroke="#000"
                     label={{
-                      value: 'Duration (min)',
-                      position: 'bottom',
-                      style: { fontSize: 10, fontFamily: 'Menlo, monospace' },
+                      value: "Duration (min)",
+                      position: "bottom",
+                      style: { fontSize: 10, fontFamily: "Menlo, monospace" },
                     }}
                   />
                   <YAxis
                     type="number"
                     dataKey="y"
                     name="Popularity"
-                    tick={{ fontSize: 10, fontFamily: 'Menlo, monospace' }}
+                    tick={{ fontSize: 10, fontFamily: "Menlo, monospace" }}
                     stroke="#000"
                     label={{
-                      value: 'Popularity',
+                      value: "Popularity",
                       angle: -90,
-                      position: 'left',
-                      style: { fontSize: 10, fontFamily: 'Menlo, monospace' },
+                      position: "left",
+                      style: { fontSize: 10, fontFamily: "Menlo, monospace" },
                     }}
                   />
                   <Tooltip
@@ -421,21 +432,26 @@ const Dashboard = () => {
                       return (
                         <div
                           style={{
-                            background: '#000',
-                            color: '#fff',
-                            padding: '4px 8px',
-                            fontSize: '0.7rem',
-                            fontFamily: 'Menlo, monospace',
-                            border: '2px solid #000',
+                            background: "#000",
+                            color: "#fff",
+                            padding: "4px 8px",
+                            fontSize: "0.7rem",
+                            fontFamily: "Menlo, monospace",
+                            border: "2px solid #000",
                           }}
                         >
-                          {data.title}<br />
+                          {data.title}
+                          <br />
                           Pop: {data.y} | Dur: {data.x.toFixed(2)}m
                         </div>
                       );
                     }}
                   />
-                  <Scatter data={scatterData} fill="#000" isAnimationActive={false} />
+                  <Scatter
+                    data={scatterData}
+                    fill="#000"
+                    isAnimationActive={false}
+                  />
                 </ScatterChart>
               </ResponsiveContainer>
 
@@ -456,15 +472,23 @@ const Dashboard = () => {
                     <tr key={item.track?.id || i}>
                       <td>{i + 1}</td>
                       <td>{item.track?.name}</td>
-                      <td>{item.track?.artists?.map(a => a.name).join(", ")}</td>
-                      <td style={{ textAlign: "right" }}>{item.track?.popularity}</td>
+                      <td>
+                        {item.track?.artists?.map((a) => a.name).join(", ")}
+                      </td>
+                      <td style={{ textAlign: "right" }}>
+                        {item.track?.popularity}
+                      </td>
                       <td style={{ textAlign: "right" }}>
                         {item.track?.album?.release_date?.substring(0, 4)}
                       </td>
                       <td style={{ textAlign: "right" }}>
                         {item.track
-                          ? `${Math.floor(item.track.duration_ms / 60000)}:${String(
-                              Math.floor((item.track.duration_ms % 60000) / 1000)
+                          ? `${Math.floor(
+                              item.track.duration_ms / 60000
+                            )}:${String(
+                              Math.floor(
+                                (item.track.duration_ms % 60000) / 1000
+                              )
                             ).padStart(2, "0")}`
                           : "-"}
                       </td>
