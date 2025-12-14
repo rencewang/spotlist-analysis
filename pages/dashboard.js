@@ -3,6 +3,7 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import { getCookies } from "cookies-next";
 import Link from "next/link";
+import useSWR from "swr";
 
 import { getPlaylists, getTracks, getArtistDetails } from "../lib/spotify";
 import {
@@ -38,80 +39,88 @@ import {
 
 const Dashboard = () => {
   const router = useRouter();
-  // Playlist state
-  const [playlists, setPlaylists] = useState([]);
-  const [selectedPlaylistInfo, setSelectedPlaylistInfo] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [selectedPlaylistUrl, setSelectedPlaylistUrl] = useState(null);
+  const [timeMode, setTimeMode] = useState("DECADE");
 
-  // View state
-  const [timeMode, setTimeMode] = useState("DECADE"); // 'DECADE' or 'YEAR'
-
-  // Processed data state
-  const [processedData, setProcessedData] = useState(null);
-  const [analysis, setAnalysis] = useState(null);
-  const [genresStats, setGenresStats] = useState([]);
-
-  // Check Auth
+  // Check auth and redirect if no token
+  const token = getCookies("token").token;
   useEffect(() => {
-    const token = getCookies("token").token;
     if (!token) {
       router.push("/");
-    } else {
-      fetchPlaylists();
     }
-  }, [router]);
+  }, [token, router]);
 
   /**
-   * Fetches user's playlists and auto-selects the first one.
+   * SWR: Fetch playlists with caching
+   * Key: 'playlists' - simple string key for the playlists endpoint
+   * Fetcher: getPlaylists - calls Spotify API
+   * Cache: Reuses data when revisiting dashboard
    */
-  const fetchPlaylists = async () => {
-    const data = await getPlaylists();
-    setPlaylists(data || []);
-    if (data && data.length > 0) {
-      handlePlaylistSelect(data[0].tracks.href, data[0]);
-    }
-  };
+  const { data: playlists } = useSWR(
+    token ? 'playlists' : null,
+    getPlaylists
+  );
 
   /**
-   * Handles playlist selection and orchestrates data fetching/processing.
-   *
-   * @param {string} url - Tracks endpoint URL
-   * @param {Object} playlistInfo - Playlist metadata
+   * Auto-select first playlist when playlists load
+   * Only runs once when playlists data becomes available
    */
-  const handlePlaylistSelect = async (url, playlistInfo) => {
-    if (!url) return;
-
-    setIsLoading(true);
-    setSelectedPlaylistInfo(playlistInfo);
-
-    try {
-      // Step 1: Fetch tracks
-      const tracksData = await getTracks(url);
-
-      // Step 2: Process all track data in one pass
-      const processed = processPlaylistData(tracksData);
-
-      if (!processed) {
-        setIsLoading(false);
-        return;
-      }
-
-      // Step 3: Fetch artist details and genres (sorted)
-      const { genreStats } = await getArtistDetails(processed.uniqueArtistIds);
-
-      // Step 4: Calculate final analysis
-      const analysisResult = calculateAnalysis(processed);
-
-      // Update state
-      setProcessedData(processed);
-      setGenresStats(genreStats);
-      setAnalysis(analysisResult);
-    } catch (error) {
-      console.error("Error processing playlist:", error);
-    } finally {
-      setIsLoading(false);
+  useEffect(() => {
+    if (playlists?.length > 0 && !selectedPlaylistUrl) {
+      setSelectedPlaylistUrl(playlists[0].tracks.href);
     }
-  };
+  }, [playlists, selectedPlaylistUrl]);
+
+  // Find selected playlist info from playlists array
+  const selectedPlaylistInfo = playlists?.find(
+    p => p.tracks.href === selectedPlaylistUrl
+  );
+
+  /**
+   * SWR: Fetch tracks for selected playlist with caching
+   * Key: ['tracks', url] - array key includes URL for unique cache per playlist
+   * Fetcher: Receives all key elements as args, we use second arg (url)
+   * Cache: Switching between playlists reuses cached track data
+   */
+  const { data: tracksData, isLoading: tracksLoading } = useSWR(
+    selectedPlaylistUrl ? ['tracks', selectedPlaylistUrl] : null,
+    ([, url]) => getTracks(url)
+  );
+
+  /**
+   * Process track data in memory (not cached by SWR)
+   * Runs whenever tracksData changes
+   */
+  const processedData = useMemo(() => {
+    if (!tracksData) return null;
+    return processPlaylistData(tracksData);
+  }, [tracksData]);
+
+  /**
+   * SWR: Fetch artist details and genres with caching
+   * Key: ['artists', ids] - array key includes artist IDs for unique cache
+   * Fetcher: Receives all key elements as args, we use second arg (ids)
+   * Cache: Same artist combinations reuse cached genre data
+   */
+  const artistIds = processedData?.uniqueArtistIds;
+  const { data: artistData } = useSWR(
+    artistIds?.length > 0 ? ['artists', artistIds] : null,
+    ([, ids]) => getArtistDetails(ids)
+  );
+
+  const genresStats = artistData?.genreStats || [];
+
+  /**
+   * Calculate final analysis from processed data
+   * Runs whenever processedData changes
+   */
+  const analysis = useMemo(() => {
+    if (!processedData) return null;
+    return calculateAnalysis(processedData);
+  }, [processedData]);
+
+  // Use SWR's loading state
+  const isLoading = tracksLoading;
 
   // Chart Logic: Time Distribution
   const timeChartData = useMemo(() => {
@@ -179,20 +188,13 @@ const Dashboard = () => {
         <SidePanel>
           <Header>
             <select
-              onChange={(e) => {
-                const playlist = playlists.find(
-                  (p) => p.tracks.href === e.target.value
-                );
-                handlePlaylistSelect(e.target.value, playlist);
-              }}
-              value={
-                selectedPlaylistInfo ? selectedPlaylistInfo.tracks.href : ""
-              }
+              onChange={(e) => setSelectedPlaylistUrl(e.target.value)}
+              value={selectedPlaylistUrl || ""}
             >
               <option value="" disabled>
                 Change Source...
               </option>
-              {playlists.map((p) => (
+              {playlists?.map((p) => (
                 <option key={p.id} value={p.tracks.href}>
                   {p.name} ({p.tracks.total})
                 </option>
