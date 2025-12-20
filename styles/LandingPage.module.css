@@ -1,56 +1,11 @@
-@keyframes scroll {
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(-50%);
-  }
-}
-
 .wrapper {
   background: #f0f0f0;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: sans-serif;
   color: #000;
   overflow: hidden;
-}
-
-.nav {
-  padding: 1rem 2rem;
-  border-bottom: 2px solid #000;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: #fff;
-  z-index: 10;
-}
-
-.logo {
-  font-weight: 800;
-  font-size: 1.2rem;
-  letter-spacing: -1px;
-}
-
-.marquee {
-  background: #000;
-  color: #fff;
-  padding: 0.5rem 0;
-  white-space: nowrap;
-  overflow: hidden;
-  position: relative;
-}
-
-.marquee .track {
-  display: inline-block;
-  animation: scroll 20s linear infinite;
-  font-family: "Menlo", monospace;
-  font-size: 0.8rem;
-}
-
-.marquee span {
-  margin-right: 2rem;
 }
 
 .main {
@@ -70,8 +25,8 @@
   top: 0;
   left: 50%;
   bottom: 0;
-  width: 1px;
-  background: #ccc;
+  width: 0.5px;
+  background: #000;
   z-index: 0;
 }
 
@@ -97,57 +52,17 @@
 }
 
 .ctaButton {
-  background: #ff3b30;
-  color: #fff;
-  text-decoration: none;
+  color: #000;
+  border: 1px solid #000;
   padding: 1rem 3rem;
-  font-size: 1.2rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  display: inline-block;
-  transition: transform 0.2s, background 0.2s;
-  z-index: 1;
+  font-size: 1rem;
+  text-transform: capitalize;
+  font-family: inherit;
   cursor: pointer;
+  z-index: 1;
 }
 
 .ctaButton:hover {
-  background: #000;
-  transform: scale(1.05);
-}
-
-.grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  border-top: 2px solid #000;
-}
-
-@media (max-width: 768px) {
-  .grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-.featureBox {
-  padding: 2rem;
-  border-right: 1px solid #ccc;
-  background: #fff;
-}
-
-.featureBox h3 {
-  font-size: 0.9rem;
-  text-transform: uppercase;
-  margin-top: 0;
-  margin-bottom: 1rem;
-  border-bottom: 2px solid #000;
-  display: inline-block;
-}
-
-.featureBox p {
-  font-size: 0.9rem;
-  line-height: 1.5;
-  color: #333;
-}
-
-.featureBox:last-child {
-  border-right: none;
+  background: orange;
+  /* border-color: orange; */
 }

@@ -43,3 +43,26 @@ header {
   justify-content: space-between;
   align-items: center;
 }
+
+header > div {
+  cursor: pointer;
+}
+
+footer {
+  margin: 0.2rem 1rem;
+  border-top: 1px solid #000;
+  font-size: 0.75rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+footer a {
+  color: #000;
+  text-decoration: none;
+}
+
+header > div:hover,
+footer a:hover {
+  opacity: 0.6;
+}

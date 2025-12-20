@@ -25,7 +25,7 @@ const Home = () => {
   return (
     <>
       <Head>
-        <title>Know Your Playlist</title>
+        <title>Playlist Anatomy</title>
         <meta
           name="description"
           content="Objective Analysis for Spotify Playlists"
