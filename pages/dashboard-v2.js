@@ -120,15 +120,22 @@ const DashboardV2 = () => {
         <title>Anatomy of {selectedPlaylistInfo?.name || "Playlist"}</title>
       </Head>
 
-      {/* Row 1: Header */}
-      <div className={styles.header}>
+      <header className={styles.header}>
+        <div onClick={() => router.push("/")}>Home</div>
+        <div>A Playlist Anatomy Of</div>
+        <div onClick={() => router.push("/api/logout")}>Log Out</div>
+      </header>
+
+      {/* Row 1: Selector */}
+      <div className={styles.selector}>
+        {/* <label>Select Playlist:</label> */}
         <select
           value={selectedPlaylistUrl || ""}
           onChange={(e) => setSelectedPlaylistUrl(e.target.value)}
         >
           {playlists?.map((p) => (
             <option key={p.id} value={p.tracks.href}>
-              Anatomy of {p.name}
+              {p.name}
             </option>
           ))}
         </select>
@@ -137,36 +144,34 @@ const DashboardV2 = () => {
       {/* Row 2: Metadata */}
       <div className={styles.metadataRow}>
         <div className={styles.metadataItem}>
-          <span className={styles.label}>Creator</span>
-          <span className={styles.value}>
+          <h2>Creator</h2>
+          <div className={styles.value}>
             {selectedPlaylistInfo?.owner?.display_name || "Unknown"}
-          </span>
+          </div>
         </div>
         <div className={styles.metadataItem}>
-          <span className={styles.label}>Tracks</span>
-          <span className={styles.value}>{analysis.trackCount}</span>
+          <h2>Tracks</h2>
+          <div className={styles.value}>{analysis.trackCount}</div>
         </div>
         <div className={styles.metadataItem}>
-          <span className={styles.label}>Duration</span>
-          <span className={styles.value}>
-            {analysis.totalDurationFormatted}
-          </span>
+          <h2>Duration</h2>
+          <div className={styles.value}>{analysis.totalDurationFormatted}</div>
         </div>
         <div className={styles.metadataItem}>
-          <span className={styles.label}>Avg Duration</span>
-          <span className={styles.value}>{analysis.avgDurationFormatted}</span>
+          <h2>Avg Duration</h2>
+          <div className={styles.value}>{analysis.avgDurationFormatted}</div>
         </div>
         <div className={styles.metadataItem}>
-          <span className={styles.label}>Avg Popularity</span>
-          <span className={styles.value}>{analysis.avgPopularity}</span>
+          <h2>Avg Popularity</h2>
+          <div className={styles.value}>{analysis.avgPopularity}</div>
         </div>
         <div className={styles.metadataItem}>
-          <span className={styles.label}>Explicit</span>
-          <span className={styles.value}>{analysis.explicitPct}%</span>
+          <h2>Explicit</h2>
+          <div className={styles.value}>{analysis.explicitPct}%</div>
         </div>
         <div className={styles.metadataItem}>
-          <span className={styles.label}>Year Span</span>
-          <span className={styles.value}>{analysis.yearRange}yr</span>
+          <h2>Year Span</h2>
+          <div className={styles.value}>{analysis.yearRange}yr</div>
         </div>
       </div>
 
@@ -654,7 +659,7 @@ const DashboardV2 = () => {
       </div>
 
       {/* Row 4: Full Tracklist */}
-      <div className={styles.tracklistRow}>
+      <div style={{ margin: "1rem" }}>
         <div className={styles.tracklist}>
           <table>
             <thead>

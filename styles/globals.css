@@ -15,7 +15,7 @@ body {
   width: 100vw;
   margin: 0;
   font-size: 18px;
-  font-family: -apple-system, BlinkMacSystemFont, 'Arial', 'Roboto', sans-serif;
+  font-family: sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -33,4 +33,13 @@ p {
 ::-webkit-scrollbar {
   width: 0px;
   height: 0px;
+}
+
+header {
+  margin: 0.2rem 1rem;
+  border-bottom: 1px solid #000;
+  font-size: 0.75rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }

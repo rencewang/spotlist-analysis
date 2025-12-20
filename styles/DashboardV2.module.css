@@ -5,51 +5,41 @@
   color: #000;
 }
 
-.header {
-  background: #fff;
-  border-bottom: 2px solid #000;
-  padding: 2rem;
-  text-align: center;
+.selector {
+  padding: 0.3rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 }
 
-.header select {
+.selector select {
+  flex: 1;
   font-size: 2rem;
-  font-weight: 700;
-  margin: 0;
-  text-transform: uppercase;
-  letter-spacing: -1px;
-  border: none;
-  background: none;
-  text-align: center;
-  cursor: pointer;
+  -webkit-text-stroke: 1px black;
+  padding: 0;
   font-family: inherit;
+  cursor: pointer;
+  text-align: center;
+  background: #f0f0f0;
+  border: 1px solid #000;
 }
 
 .metadataRow {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 1px;
+  gap: 0.6px;
+  margin: 0 1rem;
   background: #000;
-  border-bottom: 2px solid #000;
+  border: 1px solid #000;
 }
 
 .metadataItem {
-  background: #fff;
-  padding: 0.5rem;
+  background: #f0f0f0;
   text-align: center;
 }
 
-.metadataItem .label {
-  font-size: 0.7rem;
-  text-transform: uppercase;
-  font-weight: 700;
-  opacity: 0.6;
-  display: block;
-  margin-bottom: 0.5rem;
-}
-
 .metadataItem .value {
-  font-weight: 700;
+  font-size: 0.75rem;
 }
 
 .mainContent {
@@ -65,7 +55,7 @@
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   margin: 1rem;
-  gap: 1px;
+  gap: 0.6px;
   border: 1px solid #000;
   background: #000;
   min-height: 350px;
@@ -92,24 +82,25 @@
   display: flex;
   flex-direction: column;
   min-width: 0;
-  gap: 1px;
+  gap: 0.6px;
   background: #000;
 }
 
 .card {
-  background: #fff;
+  background: #f0f0f0;
 }
 
+.metadataItem h2,
 .card h2 {
   -webkit-text-stroke: 0.5px black;
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   font-weight: 700;
   text-align: center;
   margin: 0;
   border-bottom: 1px solid #000;
   padding: 0.3rem 0.5rem;
   letter-spacing: 0.5px;
-  background-color: #f0f0f0;
+  background-color: #e4e4e4;
 }
 
 .card h2:not(:first-of-type) {
@@ -157,12 +148,8 @@
   border: 1px solid #000;
 }
 
-.tracklistRow {
-  padding: 1rem;
-}
-
 .tracklist {
-  background: #fff;
+  background: #f0f0f0;
   border: 1px solid #000;
 }
 
@@ -178,7 +165,7 @@
   padding: 0.3rem 0.5rem;
   font-weight: 700;
   -webkit-text-stroke: 0.5px black;
-  background: #f0f0f0;
+  background: #e4e4e4;
 }
 
 .tracklist td {
@@ -191,5 +178,5 @@
 }
 
 .tracklist tr:hover td {
-  background: #f0f0f0;
+  background: #e4e4e4;
 }
