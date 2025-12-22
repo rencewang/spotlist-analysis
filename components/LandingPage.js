@@ -37,13 +37,13 @@ const LandingPage = () => {
 
       <main className={styles.main}>
         <h1 className={styles.heroTitle}>
-          Know
+          Dissect
           <br />
-          Your Playlists
+          Your Sound
         </h1>
         <p className={styles.subtitle}>
-          Stop guessing. Get raw, unfiltered insights into your Spotify
-          playlists.
+          An X-ray for your Spotify library. Visualize the structural data that
+          build your unique listening habits.
         </p>
 
         <button onClick={handleCtaClick} className={styles.ctaButton}>

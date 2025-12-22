@@ -21,7 +21,7 @@ A Spotify playlists stats visualization and exploration tool.
 - **Popularity**
   - *Implementation*: Average of `track.popularity` (0-100).
 - **Album & Artists**
-  - *Display*: Pie charts of album percentages and artist percentages.
+  - *Display*: Lists of top albums and artists.
 - **Duration vs. Popularity**
   - *Display*: Map of tracks with duration on x-axis and popularity on y-axis.
 

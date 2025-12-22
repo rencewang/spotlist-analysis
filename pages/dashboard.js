@@ -12,6 +12,7 @@ import {
   ResponsiveContainer,
   ScatterChart,
   Scatter,
+  ZAxis,
 } from "recharts";
 
 import { getPlaylists, getTracks, getArtistDetails } from "../lib/spotify";
@@ -97,19 +98,16 @@ const Dashboard = () => {
   const albumStats = processedData?.albumStats || [];
   const tracks = processedData?.tracks || [];
 
-  if (isLoading) {
+  if (isLoading || !analysis) {
     return (
       <div className={styles.wrapper}>
-        <div style={{ padding: "2rem", textAlign: "center" }}>Loading...</div>
-      </div>
-    );
-  }
-
-  if (!analysis) {
-    return (
-      <div className={styles.wrapper}>
-        <div style={{ padding: "2rem", textAlign: "center" }}>
-          Select a playlist
+        <header className={styles.header}>
+          <div onClick={() => router.push("/")}>Home</div>
+          <div>A Playlist Anatomy Of</div>
+          <div onClick={() => router.push("/api/logout")}>Log Out</div>
+        </header>
+        <div className={styles.loading}>
+          <span className={styles.loadingDots}>Loading</span>
         </div>
       </div>
     );
@@ -205,23 +203,23 @@ const Dashboard = () => {
             className={styles.card}
             style={{ flex: 1, display: "flex", flexDirection: "column" }}
           >
-            <h2>Popularity vs Duration</h2>
+            <h2>Track Duration vs Popularity</h2>
             <div style={{ flex: 1, minHeight: 0 }}>
               <ResponsiveContainer width="100%" height="100%">
-                <ScatterChart margin={chartStyles.margin}>
+                <ScatterChart
+                  margin={{ ...chartStyles.scatterMargin, left: -10 }}
+                >
                   <XAxis
                     type="number"
                     dataKey="y"
+                    domain={[0, 100]}
                     tick={chartStyles.axis.tick}
                     stroke={chartStyles.axis.stroke}
                     label={{
                       value: "Popularity",
                       position: "bottom",
-                      offset: 5,
-                      style: {
-                        fontSize: 10,
-                        fontFamily: chartStyles.fontFamily,
-                      },
+                      offset: -5,
+                      ...chartStyles.axisLabel,
                     }}
                   />
                   <YAxis
@@ -233,11 +231,8 @@ const Dashboard = () => {
                       value: "Duration (min)",
                       angle: -90,
                       position: "left",
-                      offset: 10,
-                      style: {
-                        fontSize: 10,
-                        fontFamily: chartStyles.fontFamily,
-                      },
+                      offset: -30,
+                      ...chartStyles.axisLabel,
                     }}
                   />
                   <Tooltip
@@ -252,6 +247,7 @@ const Dashboard = () => {
                         </div>
                       );
                     }}
+                    isAnimationActive={false}
                   />
                   <Scatter data={scatterData} {...chartStyles.scatter} />
                 </ScatterChart>
@@ -269,15 +265,18 @@ const Dashboard = () => {
             <h2>Timeline by Year</h2>
             <div style={{ flex: 1, minHeight: 0 }}>
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={yearChartData}>
+                <BarChart
+                  data={yearChartData}
+                  margin={{ top: 20, left: 10, right: 10, bottom: 10 }}
+                >
                   <XAxis
                     dataKey="year"
                     tick={{
                       ...chartStyles.axis.tick,
-                      angle: -45,
+                      angle: -90,
                       textAnchor: "end",
                     }}
-                    height={60}
+                    height={30}
                     stroke={chartStyles.axis.stroke}
                   />
                   <YAxis hide />
@@ -291,8 +290,9 @@ const Dashboard = () => {
                         </div>
                       );
                     }}
+                    isAnimationActive={false}
                   />
-                  <Bar dataKey="count" {...chartStyles.bar} />
+                  <Bar dataKey="count" {...chartStyles.verticalBar} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -345,7 +345,7 @@ const Dashboard = () => {
                     stroke={chartStyles.stroke}
                     width={60}
                   />
-                  <Bar dataKey="count" {...chartStyles.bar} />
+                  <Bar dataKey="count" {...chartStyles.horizontalBar} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -361,40 +361,41 @@ const Dashboard = () => {
             <h2>Artist Followers vs Popularity</h2>
             <div style={{ flex: 1, minHeight: 0 }}>
               <ResponsiveContainer width="100%" height="100%">
-                <ScatterChart margin={chartStyles.margin}>
+                <ScatterChart
+                  margin={{ ...chartStyles.scatterMargin, left: 10 }}
+                >
                   <XAxis
                     type="number"
                     dataKey="popularity"
+                    domain={[0, 100]}
                     tick={chartStyles.axis.tick}
                     stroke={chartStyles.axis.stroke}
                     label={{
                       value: "Popularity",
                       position: "bottom",
-                      offset: 5,
-                      style: {
-                        fontSize: 10,
-                        fontFamily: chartStyles.fontFamily,
-                      },
+                      offset: -5,
+                      ...chartStyles.axisLabel,
                     }}
                   />
                   <YAxis
                     type="number"
                     dataKey="followers"
                     scale="log"
-                    domain={["auto", "auto"]}
+                    domain={[100, "auto"]}
+                    ticks={[
+                      100, 1000, 10000, 100000, 1000000, 10000000, 100000000,
+                    ]}
                     tick={chartStyles.axis.tick}
                     stroke={chartStyles.axis.stroke}
                     label={{
                       value: "Followers (log)",
                       angle: -90,
                       position: "left",
-                      offset: 10,
-                      style: {
-                        fontSize: 10,
-                        fontFamily: chartStyles.fontFamily,
-                      },
+                      offset: -5,
+                      ...chartStyles.axisLabel,
                     }}
                   />
+                  <ZAxis range={[10, 500]} dataKey="trackCount" />
                   <Tooltip
                     content={({ payload }) => {
                       if (!payload?.[0]) return null;
@@ -411,6 +412,7 @@ const Dashboard = () => {
                         </div>
                       );
                     }}
+                    isAnimationActive={false}
                   />
                   <Scatter data={artistScatterData} {...chartStyles.scatter} />
                 </ScatterChart>
@@ -433,7 +435,7 @@ const Dashboard = () => {
                 <th style={{ textAlign: "right" }}>Pop</th>
                 <th style={{ textAlign: "right" }}>Year</th>
                 <th style={{ textAlign: "right" }}>Duration</th>
-                <th>Added</th>
+                <th style={{ textAlign: "right" }}>Added</th>
               </tr>
             </thead>
             <tbody>
@@ -462,7 +464,7 @@ const Dashboard = () => {
                         ).padStart(2, "0")}`
                       : "-"}
                   </td>
-                  <td>
+                  <td style={{ textAlign: "right" }}>
                     {item.added_at
                       ? new Date(item.added_at).toLocaleDateString()
                       : "-"}

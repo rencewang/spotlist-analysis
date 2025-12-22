@@ -7,7 +7,10 @@
 input:focus,
 select:focus,
 textarea:focus,
-button:focus {
+button:focus,
+svg:focus,
+g:focus,
+path:focus {
   outline: none;
 }
 

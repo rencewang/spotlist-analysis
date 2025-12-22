@@ -8,10 +8,6 @@ const Footer = () => {
         <a href="/terms">Terms of Service</a>
         {" · "}
         <a href="/privacy">Privacy Policy</a>
-        {" · "}
-        <a href="https://github.com/rencewang/spotlist-analysis" target="_blank" rel="noopener noreferrer">
-          GitHub
-        </a>
       </div>
     </footer>
   );

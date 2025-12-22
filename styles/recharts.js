@@ -5,17 +5,16 @@
 
 export const chartStyles = {
   // Common styles
-  fontFamily: "Menlo, monospace",
+  fontFamily: "sans-serif",
   fontSize: 10,
   stroke: "#000",
 
   // Tooltip styles
   tooltip: {
-    background: "#000",
-    color: "#fff",
+    background: "orange",
+    color: "#000",
     padding: "4px 8px",
-    fontSize: "0.7rem",
-    fontFamily: "monospace",
+    fontSize: "0.75rem",
     border: "1px solid #000",
   },
 
@@ -23,29 +22,53 @@ export const chartStyles = {
   axis: {
     tick: {
       fontSize: 10,
-      fontFamily: "Menlo, monospace",
     },
     stroke: "#000",
   },
 
   // Bar chart specific
-  bar: {
+  verticalBar: {
     fill: "#000",
-    isAnimationActive: false,
+    maxBarSize: 50,
+    label: {
+      position: "top",
+      fill: "#000",
+      fontSize: 10,
+    },
+  },
+
+  horizontalBar: {
+    fill: "#000",
+    maxBarSize: 30,
+    label: {
+      position: "insideRight",
+      fill: "#fff",
+      fontSize: 10,
+    },
   },
 
   // Scatter chart specific
   scatter: {
     fill: "#000",
-    isAnimationActive: false,
+    fillOpacity: 0.3,
+    stroke: "#000",
+    strokeWidth: 1,
   },
 
-  // Chart margins
-  margin: {
-    top: 20,
-    right: 20,
-    bottom: 20,
-    left: 20,
+  // Scatter chart margins
+  scatterMargin: {
+    top: 15,
+    right: 15,
+    bottom: 10,
+    left: 0,
+  },
+
+  axisLabel: {
+    style: {
+      fontFamily: "sans-serif",
+      fontSize: 10,
+      fill: "#000",
+    },
   },
 };
 
