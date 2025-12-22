@@ -1,0 +1,61 @@
+.container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.main {
+  flex: 1;
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 0 2rem;
+  font-family: sans-serif;
+}
+
+.main h1 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.updated {
+  font-size: 0.875rem;
+  color: #666;
+  margin-bottom: 2rem;
+}
+
+.main section {
+  margin-bottom: 2rem;
+}
+
+.main h2 {
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.main p {
+  line-height: 1.6;
+  margin: 0.5rem 0;
+}
+
+.main ul {
+  line-height: 1.6;
+  margin: 0.5rem 0;
+  padding-left: 1.5rem;
+}
+
+.main li {
+  margin: 0.25rem 0;
+}
+
+.main strong {
+  font-weight: 600;
+}
+
+.main a {
+  color: #000;
+  text-decoration: underline;
+}
+
+.main a:hover {
+  opacity: 0.6;
+}
