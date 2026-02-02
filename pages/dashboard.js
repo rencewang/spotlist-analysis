@@ -381,7 +381,7 @@ const Dashboard = () => {
                     type="number"
                     dataKey="followers"
                     scale="log"
-                    domain={[100, "auto"]}
+                    domain={[100, 100000000]}
                     ticks={[
                       100, 1000, 10000, 100000, 1000000, 10000000, 100000000,
                     ]}
@@ -425,54 +425,56 @@ const Dashboard = () => {
       {/* Row 4: Full Tracklist */}
       <div style={{ margin: "1rem" }}>
         <div className={styles.tracklist}>
-          <table>
-            <thead>
-              <tr>
-                <th style={{ width: "40px" }}>#</th>
-                <th>Title</th>
-                <th>Artist</th>
-                <th>Album</th>
-                <th style={{ textAlign: "right" }}>Pop</th>
-                <th style={{ textAlign: "right" }}>Year</th>
-                <th style={{ textAlign: "right" }}>Duration</th>
-                <th style={{ textAlign: "right" }}>Added</th>
-              </tr>
-            </thead>
-            <tbody>
-              {tracks.map((item, i) => (
-                <tr key={item.track?.id || i}>
-                  <td>{i + 1}</td>
-                  <td title={item.track?.name}>{item.track?.name}</td>
-                  <td
-                    title={item.track?.artists?.map((a) => a.name).join(", ")}
-                  >
-                    {item.track?.artists?.map((a) => a.name).join(", ")}
-                  </td>
-                  <td title={item.track?.album?.name}>
-                    {item.track?.album?.name}
-                  </td>
-                  <td style={{ textAlign: "right" }}>
-                    {item.track?.popularity}
-                  </td>
-                  <td style={{ textAlign: "right" }}>
-                    {item.track?.album?.release_date?.substring(0, 4)}
-                  </td>
-                  <td style={{ textAlign: "right" }}>
-                    {item.track
-                      ? `${Math.floor(item.track.duration_ms / 60000)}:${String(
-                          Math.floor((item.track.duration_ms % 60000) / 1000)
-                        ).padStart(2, "0")}`
-                      : "-"}
-                  </td>
-                  <td style={{ textAlign: "right" }}>
-                    {item.added_at
-                      ? new Date(item.added_at).toLocaleDateString()
-                      : "-"}
-                  </td>
+          <div className={styles.tracklistWrapper}>
+            <table>
+              <thead>
+                <tr>
+                  <th style={{ width: "40px" }}>#</th>
+                  <th>Title</th>
+                  <th>Artist</th>
+                  <th>Album</th>
+                  <th style={{ textAlign: "right" }}>Pop</th>
+                  <th style={{ textAlign: "right" }}>Year</th>
+                  <th style={{ textAlign: "right" }}>Duration</th>
+                  <th style={{ textAlign: "right" }}>Added</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {tracks.map((item, i) => (
+                  <tr key={item.track?.id || i}>
+                    <td>{i + 1}</td>
+                    <td title={item.track?.name}>{item.track?.name}</td>
+                    <td
+                      title={item.track?.artists?.map((a) => a.name).join(", ")}
+                    >
+                      {item.track?.artists?.map((a) => a.name).join(", ")}
+                    </td>
+                    <td title={item.track?.album?.name}>
+                      {item.track?.album?.name}
+                    </td>
+                    <td style={{ textAlign: "right" }}>
+                      {item.track?.popularity}
+                    </td>
+                    <td style={{ textAlign: "right" }}>
+                      {item.track?.album?.release_date?.substring(0, 4)}
+                    </td>
+                    <td style={{ textAlign: "right" }}>
+                      {item.track
+                        ? `${Math.floor(item.track.duration_ms / 60000)}:${String(
+                            Math.floor((item.track.duration_ms % 60000) / 1000)
+                          ).padStart(2, "0")}`
+                        : "-"}
+                    </td>
+                    <td style={{ textAlign: "right" }}>
+                      {item.added_at && item.added_at !== "1970-01-01T00:00:00Z"
+                        ? new Date(item.added_at).toLocaleDateString()
+                        : "-"}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
 

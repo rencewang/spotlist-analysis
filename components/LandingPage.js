@@ -42,8 +42,8 @@ const LandingPage = () => {
           Your Sound
         </h1>
         <p className={styles.subtitle}>
-          An X-ray for your Spotify library. Visualize the structural data that
-          build your unique listening habits.
+          X-ray your Spotify library. <br />
+          Visualize your unique listening habits.
         </p>
 
         <button onClick={handleCtaClick} className={styles.ctaButton}>
